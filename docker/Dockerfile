@@ -39,7 +39,10 @@ RUN adduser --uid $USER_ID --disabled-password --gecos "" $USER_NAME \
     && chown -R $USER_NAME:$USER_NAME /var/www/html /data
 
 # Set the working directory
-WORKDIR /var/www/html
+WORKDIR /var/www/html/yii
+
+# Start terminal in ./yii
+RUN echo 'cd /var/www/html/yii' >> /home/$USER_NAME/.bashrc
 
 # Switch to the newly created user
 USER $USER_NAME
@@ -48,4 +51,4 @@ USER $USER_NAME
 EXPOSE 8080
 
 # Start Yii's built-in server
-CMD ["php", "yii", "serve", "0.0.0.0", "--port=8080", "--docroot=/var/www/html/web"]
+CMD ["php", "yii", "serve", "0.0.0.0", "--port=8080", "--docroot=/var/www/html/yii/web"]

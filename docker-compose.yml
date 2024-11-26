@@ -19,7 +19,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./yii:/var/www/html
+      - .:/var/www/html
     depends_on:
       - mysql
     networks:
