@@ -9,12 +9,15 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libpng-dev \
     libonig-dev \
-    libxml2-dev \    
+    libxml2-dev \
+    libfreetype6-dev \
+    libjpeg-dev \
     vim --no-install-recommends && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
+    docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
 
 # Install Xdebug
 RUN pecl install xdebug && docker-php-ext-enable xdebug
