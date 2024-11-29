@@ -51,7 +51,7 @@ RUN echo 'cd /var/www/html/yii' >> /home/$USER_NAME/.bashrc
 USER $USER_NAME
 
 # Expose port
-EXPOSE 8080
+EXPOSE 8502
 
 # Start Yii's built-in server
-CMD ["php", "yii", "serve", "0.0.0.0", "--port=8080", "--docroot=/var/www/html/yii/web"]
+CMD ["php", "yii", "serve", "0.0.0.0", "--port=8502", "--docroot=/var/www/html/yii/web"]
