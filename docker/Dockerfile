@@ -41,11 +41,17 @@ RUN adduser --uid $USER_ID --disabled-password --gecos "" $USER_NAME \
     && mkdir -p /data \
     && chown -R $USER_NAME:$USER_NAME /var/www/html /data
 
-# Set the working directory
-WORKDIR /var/www/html/yii
+# Define the work directory as a build argument
+ARG WORKDIR=/var/www/html/yii
 
-# Start terminal in ./yii
-RUN echo 'cd /var/www/html/yii' >> /home/$USER_NAME/.bashrc
+# Set the working directory
+WORKDIR $WORKDIR
+
+# Add current directory (.) to the PATH
+ENV PATH="$WORKDIR:${PATH}"
+
+# Start terminal in the working directory
+RUN echo "cd $WORKDIR" >> /home/$USER_NAME/.bashrc
 
 # Switch to the newly created user
 USER $USER_NAME
