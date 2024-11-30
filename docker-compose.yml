@@ -15,7 +15,7 @@ services:
     extra_hosts:
         - 'host.docker.internal:host-gateway'      
     ports:
-        - '8502:8502'
+        - '9000:9000'
         - '9003:9003'
     env_file:
       - .env
@@ -23,6 +23,19 @@ services:
       - .:/var/www/html
     depends_on:
       - mysql
+    networks:
+      - moneymonkey_network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - '8502:80'
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - yii
     networks:
       - moneymonkey_network
 

@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+FROM php:8.2-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -56,8 +56,8 @@ RUN echo "cd $WORKDIR" >> /home/$USER_NAME/.bashrc
 # Switch to the newly created user
 USER $USER_NAME
 
-# Expose port
-EXPOSE 8502
+# Expose port for PHP-FPM
+EXPOSE 9000
 
-# Start Yii's built-in server
-CMD ["php", "yii", "serve", "0.0.0.0", "--port=8502", "--docroot=/var/www/html/yii/web"]
+# Start PHP-FPM
+CMD ["php-fpm"]
