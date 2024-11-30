@@ -36,7 +36,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         NavBar::begin([
             'brandLabel' => Html::img('@web/images/money-monkey-logo-nav.png', ['alt' => Yii::$app->name, 'height' => 40]) . '&nbsp;&nbsp;&nbsp;' . Yii::$app->name,
             'brandUrl' => Yii::$app->homeUrl,
-            'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top custom-navbar']
+            'options' => ['class' => 'navbar-expand-md navbar-dark custom-bg-dark fixed-top']
         ]);
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav ms-auto'],

@@ -9,6 +9,7 @@ services:
         - USER_ID=${USER_ID:-1000}
         - USER_NAME=${USER_NAME:-appuser}
     container_name: yii
+    working_dir: /var/www/html/yii
     environment:
       TZ: ${TIMEZONE:-Europe/Amsterdam}
     extra_hosts:
@@ -22,6 +23,19 @@ services:
       - .:/var/www/html
     depends_on:
       - mysql
+    networks:
+      - moneymonkey_network
+
+  npm:
+    image: node:18
+    container_name: npm
+    working_dir: /var/www/html/npm
+    ports:
+        - '8080:8080'
+    volumes:
+      - .:/var/www/html
+    user: 'node'      
+    command: sh -c "npm install && npm start"
     networks:
       - moneymonkey_network
 
