@@ -1,6 +1,7 @@
 <?php
 
 /** @var yii\web\View $this */
+/** @var string $dbConnectionStatus */
 
 use yii\helpers\Html;
 
@@ -41,4 +42,8 @@ $this->title = 'Welcome to MoneyMonkey';
         </div>
     </div>
 
+    <div class="container mt-5">
+        <h3>Database Connection Status:</h3>
+        <p><?= Html::encode($dbConnectionStatus) ?></p>
+    </div>
 </div>

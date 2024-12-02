@@ -61,9 +61,21 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
-    }
+        $dbConnectionStatus = 'Not connected';
 
+        try {
+            Yii::$app->db->open();
+            if (Yii::$app->db->isActive) {
+                $dbConnectionStatus = 'Connected';
+            }
+        } catch (\Exception $e) {
+            $dbConnectionStatus = 'Connection failed: ' . $e->getMessage();
+        }
+
+        return $this->render('index', [
+            'dbConnectionStatus' => $dbConnectionStatus,
+        ]);
+    }
     /**
      * Login action.
      *
