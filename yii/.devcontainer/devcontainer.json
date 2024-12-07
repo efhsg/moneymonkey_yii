@@ -21,15 +21,10 @@
 		"vscode": {
 			"extensions": [
 				"DEVSENSE.phptools-vscode",
+				"DEVSENSE.intelli-php-vscode",				
 				"xdebug.php-debug",
 				"esbenp.prettier-vscode",
-				"formulahendry.auto-rename-tag",
-				"DEVSENSE.composer-php-vscode",
-				"DEVSENSE.intelli-php-vscode",
-				"tahabasri.snippets",
-				"ms-vscode.test-adapter-converter",
-				"redhat.vscode-yaml",
-				"ms-azuretools.vscode-docker"
+				"formulahendry.auto-rename-tag"
 			]
 		}
 	}

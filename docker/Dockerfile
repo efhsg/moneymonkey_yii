@@ -50,9 +50,6 @@ WORKDIR $WORKDIR
 # Add current directory (.) to the PATH
 ENV PATH="$WORKDIR:${PATH}"
 
-# Start terminal in the working directory
-RUN echo "cd $WORKDIR" >> /home/$USER_NAME/.bashrc
-
 # Switch to the newly created user
 USER $USER_NAME
 
