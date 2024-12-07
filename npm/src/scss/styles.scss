@@ -1,4 +1,4 @@
-// Override Bootstrap vars
+// Override Bootstrap colors
 $primary: #002944;
 $secondary: #32434e;
 $success: #008000;
@@ -11,6 +11,7 @@ $dark: #1a2035;
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 
+// Add to theme colors
 $custom-theme-colors: (
   "altdark": $primary,
 );
