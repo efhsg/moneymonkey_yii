@@ -7,13 +7,14 @@ use yii\helpers\Html;
 
 $this->title = 'Welcome to MoneyMonkey';
 ?>
+
 <div class="site-index">
     <div class="jumbotron text-center bg-light py-5">
         <img src="<?= Yii::getAlias('@web/images/money-monkey-logo.png') ?>" alt="MoneyMonkey Logo" width="200"
             class="mb-4">
         <h1 class="display-4">MoneyMonkey</h1>
         <p class="lead">Your Automated Stocks Advisor</p>
-        <p><?= Html::a('Get Started', ['/site/contact'], ['class' => 'btn btn-primary btn-lg']) ?></p>
+        <p><?= Html::a('Get Started', ['/site/configuration'], ['class' => 'btn btn-primary btn-lg']) ?></p>
     </div>
 
     <div class="body-content">
@@ -40,10 +41,5 @@ $this->title = 'Welcome to MoneyMonkey';
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="container mt-5">
-        <h3>Database Connection Status:</h3>
-        <p><?= Html::encode($dbConnectionStatus) ?></p>
     </div>
 </div>

@@ -12,10 +12,8 @@ use app\models\ContactForm;
 
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
+
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -38,10 +36,7 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
+    public function actions(): array
     {
         return [
             'error' => [
@@ -54,34 +49,22 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex()
+    public function actionIndex(): string
     {
-        $dbConnectionStatus = 'Not connected';
-
         try {
-            Yii::$app->db->open();
-            if (Yii::$app->db->isActive) {
-                $dbConnectionStatus = 'Connected';
-            }
+            Yii::$app->db->createCommand('SELECT 1')->execute();
+            return $this->render('index');
         } catch (\Exception $e) {
-            $dbConnectionStatus = 'Connection failed: ' . $e->getMessage();
+            Yii::error('Database connection failed: ' . $e->getMessage(), __METHOD__);
+            $this->layout = 'fatal';
+            return $this->render('error', [
+                'name' => 'Database Connection Error',
+                'message' => 'Unable to connect to the database. Please try again later.',
+            ]);
         }
-
-        return $this->render('index', [
-            'dbConnectionStatus' => $dbConnectionStatus,
-        ]);
     }
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
+
+    public function actionLogin(): Response|string
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -98,24 +81,14 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
+    public function actionLogout(): Response
     {
         Yii::$app->user->logout();
 
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
+    public function actionContact(): Response|string
     {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
@@ -128,13 +101,29 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
+    public function actionAbout(): string
     {
         return $this->render('about');
     }
+
+    public function actionConfiguration(): string
+    {
+        return $this->render('configuration');
+    }
+
+    public function actionFeatures(): string
+    {
+        return $this->render('features');
+    }
+
+    public function actionStockAnalyis(): string
+    {
+        return $this->render('stock-analyis');
+    }
+
+    public function actionPortfolioManagement(): string
+    {
+        return $this->render('portfolio-management');
+    }
+
 }

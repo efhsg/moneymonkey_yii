@@ -11,8 +11,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        This is the About page. You may modify the following file to customize its content:
+        MoneyMonkey will help you to automate fundamental analysis of your stocks. On an individual level a buy, hold or
+        sell advice, based on a fundamental analysis. It will also help you to rebalance your current portfolio.
     </p>
 
-    <code><?= __FILE__ ?></code>
 </div>
