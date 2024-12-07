@@ -1,5 +1,31 @@
-// Import Bootstrap's SCSS
-@use "bootstrap/scss/bootstrap";
+// Override Bootstrap vars
+$primary: #002944;
+$secondary: #32434e;
+$success: #008000;
+$info: #19b5fe;
+$warning: #f9c80e;
+$danger: #d91e18;
+$light: #ffffff;
+$dark: #1a2035;
 
-// Import custom styles
-@use "custom-styles";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+$custom-theme-colors: (
+  "altdark": $primary,
+);
+
+$theme-colors: map-merge($custom-theme-colors, $theme-colors);
+
+@import "bootstrap/scss/bootstrap";
+
+// Custom styles
+.btn-primary {
+  background-color: $primary;
+  border-color: $primary;
+}
+
+.btn-primary:hover {
+  background-color: $secondary;
+  border-color: $secondary;
+}
