@@ -21,10 +21,12 @@
 		"vscode": {
 			"extensions": [
 				"DEVSENSE.phptools-vscode",
-				"DEVSENSE.intelli-php-vscode",				
+				"DEVSENSE.intelli-php-vscode",
 				"xdebug.php-debug",
 				"esbenp.prettier-vscode",
-				"formulahendry.auto-rename-tag"
+				"formulahendry.auto-rename-tag",
+				"imanilchaudhari.yii2-snippets",
+				"mahdiPakzad.yii2-peek"
 			]
 		}
 	}
