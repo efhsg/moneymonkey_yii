@@ -91,6 +91,16 @@ class User extends ActiveRecord implements IdentityInterface
         return static::find()->active()->andWhere(['access_token' => $token])->one();
     }
 
+    public static function findByUsername(string $username): ?self
+    {
+        return static::find()->active()->byUsername($username)->one();
+    }
+
+    public static function findByPasswordResetToken(string $token): ?self
+    {
+        return static::find()->active()->byPasswordResetToken($token)?->one();
+    }
+
     public function getId(): int|string
     {
         return $this->getPrimaryKey();

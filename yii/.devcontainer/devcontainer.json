@@ -27,7 +27,8 @@
 				"formulahendry.auto-rename-tag",
 				"imanilchaudhari.yii2-snippets",
 				"mahdiPakzad.yii2-peek",
-				"MehediDracula.php-namespace-resolver"
+				"MehediDracula.php-namespace-resolver",
+				"qwtel.sqlite-viewer"
 			]
 		}
 	}

@@ -53,6 +53,11 @@ ENV PATH="$WORKDIR:${PATH}"
 # Switch to the newly created user
 USER $USER_NAME
 
+# Create the function and append it to ~/.bashrc
+RUN echo 'function test() {' >> /home/$USER_NAME/.bashrc && \
+    echo '    clear && vendor/bin/codecept run "$@"' >> /home/$USER_NAME/.bashrc && \
+    echo '}' >> /home/$USER_NAME/.bashrc
+
 # Expose port for PHP-FPM
 EXPOSE 9000
 
