@@ -23,11 +23,8 @@ class UserQuery extends ActiveQuery
         return $this->andWhere(['username' => $username]);
     }
 
-    public function byPasswordResetToken(string $token): ?self
+    public function byPasswordResetToken(string $token): self
     {
-        if (!User::isPasswordResetTokenValid($token)) {
-            return null;
-        }
         return $this->andWhere(['password_reset_token' => $token]);
     }
 }

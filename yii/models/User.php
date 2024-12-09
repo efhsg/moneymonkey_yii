@@ -98,7 +98,10 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function findByPasswordResetToken(string $token): ?self
     {
-        return static::find()->active()->byPasswordResetToken($token)?->one();
+        if (!self::isPasswordResetTokenValid($token)) {
+            return null;
+        }
+        return static::find()->active()->byPasswordResetToken($token)->one();
     }
 
     public function getId(): int|string
@@ -131,7 +134,7 @@ class User extends ActiveRecord implements IdentityInterface
         $this->auth_key = Yii::$app->security->generateRandomString(32);
     }
 
-    public static function isPasswordResetTokenValid($token): bool
+    private static function isPasswordResetTokenValid($token): bool
     {
         if (!$token || !str_contains($token, '_')) {
             return false;

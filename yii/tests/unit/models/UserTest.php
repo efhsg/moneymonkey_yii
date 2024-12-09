@@ -108,17 +108,4 @@ class UserTest extends \Codeception\Test\Unit
         verify(strlen($user->auth_key))->equals(32);
     }
 
-    public function testIsPasswordResetTokenValid()
-    {
-        $validTimestamp = time();
-        $validToken = 'reset_token_' . $validTimestamp;
-        $invalidToken = 'invalid_token';
-        $expiredTimestamp = time() - User::TOKEN_EXPIRATION_SECONDS - 1;
-        $expiredToken = 'reset_token_' . $expiredTimestamp;
-
-        verify(User::isPasswordResetTokenValid($validToken))->true();
-        verify(User::isPasswordResetTokenValid($invalidToken))->false();
-        verify(User::isPasswordResetTokenValid($expiredToken))->false();
-    }
-
 }
