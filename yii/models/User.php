@@ -2,103 +2,134 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+use Yii;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
+use yii\behaviors\TimestampBehavior;
+
+/**
+ *
+ * @property int $id
+ * @property string $username
+ * @property string $email
+ * @property string $password_hash
+ * @property string $auth_key
+ * @property string|null $password_reset_token
+ * @property string|null $access_token
+ * @property int $status
+ * @property int $created_at
+ * @property int $updated_at
+ * @property int $deleted_at 
+ */
+class User extends ActiveRecord implements IdentityInterface
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
-
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
 
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function findIdentity($id)
+    const TOKEN_EXPIRATION_SECONDS = 3600;
+
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 10;
+
+    public static function tableName(): string
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return '{{%user}}';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public function behaviors(): array
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
+
+    public function rules(): array
+    {
+        return [
+            [['username', 'email', 'password_hash'], 'required'],
+            [['status', 'created_at', 'updated_at', 'deleted_at'], 'integer'],
+            [['username', 'email', 'password_hash', 'password_reset_token', 'access_token'], 'string', 'max' => 255],
+            [['auth_key'], 'string', 'max' => 32],
+            [['username', 'email', 'password_reset_token', 'access_token'], 'unique'],
+            [['status'], 'default', 'value' => self::STATUS_ACTIVE],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
+            [['username', 'email'], 'trim'],
+            [['email'], 'filter', 'filter' => 'strtolower'],
+            [['email'], 'email'],
+        ];
+    }
+
+    public function attributeLabels(): array
+    {
+        return [
+            'id' => 'ID',
+            'username' => 'Username',
+            'email' => 'Email',
+            'password_hash' => 'Password Hash',
+            'auth_key' => 'Auth Key',
+            'password_reset_token' => 'Password Reset Token',
+            'access_token' => 'Access Token',
+            'status' => 'Status',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'deleted_at' => 'Deleted At',
+        ];
+    }
+
+    public static function find()
+    {
+        return new UserQuery(get_called_class());
+    }
+
+    public static function findIdentity($id): ?self
+    {
+        return static::find()->active()->andWhere(['id' => $id])->one();
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null): ?self
+    {
+        return static::find()->active()->andWhere(['access_token' => $token])->one();
+    }
+
+    public function getId(): int|string
+    {
+        return $this->getPrimaryKey();
+    }
+
+    public function getAuthKey(): string
+    {
+        return $this->auth_key;
+    }
+
+    public function validateAuthKey($authKey): bool
+    {
+        return $this->getAuthKey() === $authKey;
+    }
+
+    public function setPassword($password): void
+    {
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
+
+    public function validatePassword($password): bool
+    {
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
+    }
+
+    public function generateAuthKey(): void
+    {
+        $this->auth_key = Yii::$app->security->generateRandomString(32);
+    }
+
+    public static function isPasswordResetTokenValid($token): bool
+    {
+        if (!$token || !str_contains($token, '_')) {
+            return false;
         }
+        $parts = explode('_', $token);
+        $timestamp = (int) end($parts);
+        $expire = Yii::$app->params['user.passwordResetTokenExpire'] ?? self::TOKEN_EXPIRATION_SECONDS;
 
-        return null;
-    }
-
-    /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return static|null
-     */
-    public static function findByUsername($username)
-    {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAuthKey()
-    {
-        return $this->authKey;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->authKey === $authKey;
-    }
-
-    /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
+        return $timestamp + $expire >= time();
     }
 }

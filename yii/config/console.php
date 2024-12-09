@@ -28,6 +28,11 @@ $config = [
         'db' => $db,
     ],
     'params' => $params,
+    'container' => [
+        'definitions' => [
+            app\services\UserService::class => app\services\UserService::class
+        ],
+    ],
     /*
     'controllerMap' => [
         'fixture' => [ // Fixture generation command line.
