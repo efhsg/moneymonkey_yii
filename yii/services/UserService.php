@@ -8,26 +8,20 @@ use app\models\User;
 
 class UserService
 {
-
     public function create(string $username, string $email, string $password): User
     {
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
-            $user = new User();
-            $user->username = $username;
-            $user->email = $email;
-            $user->setPassword($password);
-            $user->generateAuthKey();
-            $user->status = User::STATUS_ACTIVE;
+            $user = $this->createUserInstance($username, $email, $password);
 
-            if ($user->save()) {
-                $transaction->commit();
-            } else {
-                $transaction->rollBack();
+            if (!$user->save()) {
+                throw new Exception('Failed to save user: ' . json_encode($user->errors));
             }
 
+            $transaction->commit();
             return $user;
+
         } catch (Exception $e) {
             $transaction->rollBack();
             Yii::error("Error creating user '{$username}': " . $e->getMessage(), __METHOD__);
@@ -37,14 +31,12 @@ class UserService
 
     public function generatePasswordResetToken(User $user): bool
     {
-        $user->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
-        return $user->save(false);
+        return $this->updateUserAttribute($user, 'password_reset_token', Yii::$app->security->generateRandomString() . '_' . time());
     }
 
     public function removePasswordResetToken(User $user): bool
     {
-        $user->password_reset_token = null;
-        return $user->save(false);
+        return $this->updateUserAttribute($user, 'password_reset_token', null);
     }
 
     public function softDelete(User $user): bool
@@ -54,14 +46,7 @@ class UserService
             return false;
         }
 
-        $user->deleted_at = time();
-
-        try {
-            return $user->save(false);
-        } catch (Exception $e) {
-            Yii::error("Error during soft delete: " . $e->getMessage(), __METHOD__);
-            return false;
-        }
+        return $this->updateUserAttribute($user, 'deleted_at', time());
     }
 
     public function restoreSoftDelete(User $user): bool
@@ -71,12 +56,28 @@ class UserService
             return false;
         }
 
-        $user->deleted_at = null;
+        return $this->updateUserAttribute($user, 'deleted_at', null);
+    }
 
+    private function createUserInstance(string $username, string $email, string $password): User
+    {
+        $user = new User();
+        $user->username = $username;
+        $user->email = $email;
+        $user->setPassword($password);
+        $user->generateAuthKey();
+        $user->status = User::STATUS_ACTIVE;
+
+        return $user;
+    }
+
+    private function updateUserAttribute(User $user, string $attribute, $value): bool
+    {
+        $user->$attribute = $value;
         try {
-            return $user->save(false, ['deleted_at']);
+            return $user->save(false, [$attribute]);
         } catch (Exception $e) {
-            Yii::error("Error restoring record ID {$user->id}: " . $e->getMessage(), __METHOD__);
+            Yii::error("Error updating {$attribute} for user ID {$user->id}: " . $e->getMessage(), __METHOD__);
             return false;
         }
     }
