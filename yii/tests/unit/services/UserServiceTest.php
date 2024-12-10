@@ -43,13 +43,12 @@ class UserServiceTest extends Unit
     {
         $this->expectException(\Exception::class);
 
-        // Simulate an error by using an invalid email format
         $this->userService->create('invaliduser', 'invalid-email', 'password123');
     }
 
     public function testGeneratePasswordResetToken()
     {
-        $user = User::findOne(100); // Assuming fixture provides this user
+        $user = User::findOne(100);
 
         $result = $this->userService->generatePasswordResetToken($user);
 

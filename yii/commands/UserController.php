@@ -6,6 +6,7 @@ use Yii;
 use yii\console\ExitCode;
 use yii\console\Controller;
 use app\services\UserService;
+use app\exceptions\UserCreationException;
 
 class UserController extends Controller
 {
@@ -21,21 +22,15 @@ class UserController extends Controller
     public function actionCreate(string $username, string $email, string $password): int
     {
         try {
-            $user = $this->userService->create($username, $email, $password);
-
-            if ($user->hasErrors()) {
-                echo "Failed to create user '{$username}'.\n";
-                foreach ($user->errors as $attribute => $errors) {
-                    echo ucfirst($attribute) . ': ' . implode(", ", $errors) . "\n";
-                }
-                return ExitCode::UNSPECIFIED_ERROR;
-            }
-
-            echo "User '{$username}' has been created successfully.\n";
+            $this->userService->create($username, $email, $password);
+            $this->stdout("User '{$username}' has been created successfully.\n");
             return ExitCode::OK;
+        } catch (UserCreationException $e) {
+            $this->stdout("Failed to create user '{$username}': {$e->getMessage()}\n");
+            return ExitCode::UNSPECIFIED_ERROR;
         } catch (\Throwable $e) {
-            Yii::error("An error occurred while creating user '{$username}': " . $e->getMessage(), __METHOD__);
-            echo "An unexpected error occurred: {$e->getMessage()}\n";
+            Yii::error("An unexpected error occurred: " . $e->getMessage(), __METHOD__);
+            $this->stdout("An unexpected error occurred: {$e->getMessage()}\n");
             return ExitCode::UNSPECIFIED_ERROR;
         }
     }

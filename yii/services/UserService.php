@@ -5,9 +5,14 @@ namespace app\services;
 use Yii;
 use Exception;
 use app\models\User;
+use app\exceptions\UserCreationException;
+use app\traits\ValidationErrorFormatterTrait;
 
 class UserService
 {
+
+    use ValidationErrorFormatterTrait;
+
     public function create(string $username, string $email, string $password): User
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -16,16 +21,21 @@ class UserService
             $user = $this->createUserInstance($username, $email, $password);
 
             if (!$user->save()) {
-                throw new Exception('Failed to save user: ' . json_encode($user->errors));
+                throw new UserCreationException("User creation failed: {$this->formatValidationErrors($user)}");
             }
 
             $transaction->commit();
             return $user;
 
-        } catch (Exception $e) {
+        } catch (UserCreationException $e) {
             $transaction->rollBack();
-            Yii::error("Error creating user '{$username}': " . $e->getMessage(), __METHOD__);
+            Yii::error("Validation error creating user '{$username}': " . $e->getMessage(), __METHOD__);
             throw $e;
+
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            Yii::error("Unexpected error creating user '{$username}': " . $e->getMessage(), __METHOD__);
+            throw new UserCreationException("An unexpected error occurred while creating the user.", 0, $e);
         }
     }
 
