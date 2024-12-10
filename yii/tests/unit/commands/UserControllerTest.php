@@ -22,7 +22,16 @@ class UserControllerTest extends Unit
     protected function _before()
     {
         $this->userService = Yii::$container->get(UserService::class);
-        $this->controller = new UserController('user', Yii::$app, $this->userService);
+
+        $this->controller = new class ('user', Yii::$app, $this->userService) extends UserController {
+            public function stdout($string)
+            {
+            }
+
+            public function stderr($string)
+            {
+            }
+        };
     }
 
     public function _fixtures()
@@ -65,7 +74,15 @@ class UserControllerTest extends Unit
         $mockUserService->method('create')->willThrowException(new Exception('Database error'));
 
         /** @var UserController $controller */
-        $controller = new UserController('user', Yii::$app, $mockUserService);
+        $controller = new class ('user', Yii::$app, $mockUserService) extends UserController {
+            public function stdout($string)
+            {
+            }
+
+            public function stderr($string)
+            {
+            }
+        };
 
         $exitCode = $controller->actionCreate('testuser', 'test@example.com', 'password123');
         $this->assertEquals(ExitCode::UNSPECIFIED_ERROR, $exitCode);
