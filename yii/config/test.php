@@ -10,7 +10,7 @@ return [
     'basePath' => dirname(__DIR__),
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
     'language' => 'en-US',
     'components' => [
@@ -30,6 +30,8 @@ return [
         ],
         'user' => [
             'identityClass' => 'app\models\User',
+            'enableAutoLogin' => true,
+            'authTimeout' => 3600 * 24 * 30,
         ],
         'request' => [
             'cookieValidationKey' => 'test',

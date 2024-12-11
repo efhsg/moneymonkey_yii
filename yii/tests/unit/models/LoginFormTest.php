@@ -2,52 +2,97 @@
 
 namespace tests\unit\models;
 
+use Yii;
 use app\models\LoginForm;
+use app\models\User;
+use tests\fixtures\UserFixture;
 
 class LoginFormTest extends \Codeception\Test\Unit
 {
-    private $model;
 
-    protected function _after()
+    public function _fixtures()
     {
-        \Yii::$app->user->logout();
+        return [
+            'users' => UserFixture::class,
+        ];
     }
 
-    public function testLoginNoUser()
+    public function testLoginSuccess()
     {
-        $this->model = new LoginForm([
-            'username' => 'not_existing_username',
-            'password' => 'not_existing_password',
+        $model = new LoginForm([
+            'username' => 'admin',
+            'password' => 'admin',
         ]);
 
-        verify($this->model->login())->false();
-        verify(\Yii::$app->user->isGuest)->true();
+        verify($model->login())->true();
+        verify(Yii::$app->user->isGuest)->false();
+        verify(Yii::$app->user->identity->username)->equals('admin');
     }
 
-    public function testLoginWrongPassword()
+    public function testLoginFailureWithIncorrectPassword()
     {
-        $this->model = new LoginForm([
-            'username' => 'demo',
+        $model = new LoginForm([
+            'username' => 'admin',
             'password' => 'wrong_password',
         ]);
 
-        verify($this->model->login())->false();
-        verify(\Yii::$app->user->isGuest)->true();
-        verify($this->model->errors)->arrayHasKey('password');
+        verify($model->login())->false();
+        verify($model->hasErrors('password'))->true();
+        verify($model->getFirstError('password'))->equals('Incorrect username or password.');
     }
 
+    public function testLoginFailureWithNonExistingUser()
+    {
+        $model = new LoginForm([
+            'username' => 'non_existing_user',
+            'password' => 'some_password',
+        ]);
 
-    // @TODO rewrite
-    // public function testLoginCorrect()
-    // {
-    //     $this->model = new LoginForm([
-    //         'username' => 'demo',
-    //         'password' => 'demo',
-    //     ]);
+        verify($model->login())->false();
+        verify($model->hasErrors('password'))->true();
+        verify($model->getFirstError('password'))->equals('Incorrect username or password.');
+    }
 
-    //     verify($this->model->login())->true();
-    //     verify(\Yii::$app->user->isGuest)->false();
-    //     verify($this->model->errors)->arrayHasNotKey('password');
-    // }
+    public function testLoginWithRememberMe()
+    {
+        $model = new LoginForm([
+            'username' => 'admin',
+            'password' => 'admin',
+            'rememberMe' => true,
+        ]);
 
+        verify($model->login())->true();
+        $identity = Yii::$app->user->identity;
+        verify($identity)->notEmpty();
+        verify(Yii::$app->user->isGuest)->false();
+        verify(Yii::$app->user->identity->username)->equals('admin');
+
+        // Verify that the session cookie is set for 30 days (3600 * 24 * 30 seconds)
+        $duration = Yii::$app->user->authTimeout;
+        verify($duration)->equals(3600 * 24 * 30);
+    }
+
+    public function testLoginWithEmptyFields()
+    {
+        $model = new LoginForm([
+            'username' => '',
+            'password' => '',
+        ]);
+
+        verify($model->validate())->false();
+        verify($model->hasErrors('username'))->true();
+        verify($model->hasErrors('password'))->true();
+    }
+
+    public function testGetUser()
+    {
+        $model = new LoginForm(['username' => 'admin']);
+        $user = $model->getUser();
+
+        verify($user)->notEmpty();
+        verify($user->username)->equals('admin');
+
+        $nonExistentModel = new LoginForm(['username' => 'non_existing_user']);
+        verify($nonExistentModel->getUser())->empty();
+    }
 }
