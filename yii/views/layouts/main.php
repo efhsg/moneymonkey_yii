@@ -3,11 +3,14 @@
 /** @var yii\web\View $this */
 /** @var string $content */
 
-use yii\bootstrap5\Html;
-use yii\bootstrap5\Nav;
-use yii\bootstrap5\NavBar;
 use app\widgets\Alert;
-use yii\bootstrap5\Breadcrumbs;
+
+use yii\bootstrap5\{
+    Breadcrumbs,
+    Html,
+    Nav,
+    NavBar
+};
 
 $this->beginContent('@app/views/layouts/_base.php'); ?>
 
@@ -33,9 +36,9 @@ $this->beginContent('@app/views/layouts/_base.php'); ?>
         'items' => [
             ['label' => 'About', 'url' => ['/site/about']],
             Yii::$app->user->isGuest
-            ? ['label' => 'Login', 'url' => ['/site/login']]
+            ? ['label' => 'Login', 'url' => ['/login/login']]
             : '<li class="nav-item">'
-            . Html::beginForm(['/site/logout'])
+            . Html::beginForm(['/login/logout'])
             . Html::submitButton(
                 'Logout (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'nav-link btn btn-link logout']
