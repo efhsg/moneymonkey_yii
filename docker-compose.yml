@@ -58,12 +58,14 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_DATABASE_TEST: ${DB_DATABASE_TEST}      
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "${DB_PORT:-3306}:3306"
     volumes:
       - ./data/db/mysql:/var/lib/mysql
+      - ./docker/init-scripts:/docker-entrypoint-initdb.d
     networks:
       - moneymonkey_network
 

@@ -1,6 +1,14 @@
 <?php
-$db = require __DIR__ . '/db.php';
-// test database! Important not to run tests on production or development databases
-$db['dsn'] = 'sqlite:' . __DIR__ . '/../tests/_data/test.db';
 
-return $db;
+return [
+    'class' => 'yii\db\Connection',
+    'dsn' => sprintf(
+        'mysql:host=%s;port=%s;dbname=%s',
+        getenv('DB_HOST'),
+        getenv('DB_PORT'),
+        getenv('DB_DATABASE_TEST')
+    ),
+    'username' => getenv('DB_USER'),
+    'password' => getenv('DB_PASSWORD'),
+    'charset' => 'utf8',
+];
