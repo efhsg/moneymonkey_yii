@@ -3,7 +3,6 @@
 namespace app\models;
 
 use yii\db\ActiveQuery;
-use app\models\traits\SoftDeleteTrait;
 
 class UserQuery extends ActiveQuery
 {

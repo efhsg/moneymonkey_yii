@@ -2,16 +2,24 @@
 
 namespace app\services;
 
-use Yii;
-use Exception;
-use app\models\User;
 use app\exceptions\UserCreationException;
+use app\models\User;
 use app\traits\ValidationErrorFormatterTrait;
+use Exception;
+use yii\db\Transaction;
+use Yii;
 
 class UserService
 {
 
     use ValidationErrorFormatterTrait;
+
+    private UserDataSeeder $userDataSeeder;
+
+    public function __construct()
+    {
+        $this->userDataSeeder = new UserDataSeeder();
+    }
 
     public function create(string $username, string $email, string $password): User
     {
@@ -24,14 +32,14 @@ class UserService
                 throw new UserCreationException("User creation failed: {$this->formatValidationErrors($user)}");
             }
 
+            $this->userDataSeeder->seed($user->id);
+
             $transaction->commit();
             return $user;
-
         } catch (UserCreationException $e) {
             $transaction->rollBack();
             Yii::error("Validation error creating user '{$username}': " . $e->getMessage(), __METHOD__);
             throw $e;
-
         } catch (\Throwable $e) {
             $transaction->rollBack();
             Yii::error("Unexpected error creating user '{$username}': " . $e->getMessage(), __METHOD__);
@@ -91,4 +99,5 @@ class UserService
             return false;
         }
     }
+
 }

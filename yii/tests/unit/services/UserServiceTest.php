@@ -4,9 +4,12 @@ namespace tests\unit\services;
 
 use Yii;
 use app\models\User;
+use app\models\Sector;
+use app\models\Industry;
+use app\models\MetricType;
+use Codeception\Test\Unit;
 use app\services\UserService;
 use tests\fixtures\UserFixture;
-use Codeception\Test\Unit;
 
 class UserServiceTest extends Unit
 {
@@ -38,6 +41,37 @@ class UserServiceTest extends Unit
         verify(Yii::$app->security->validatePassword($password, $user->password_hash))->true();
         verify($user->status)->equals(User::STATUS_ACTIVE);
     }
+
+    public function testCreateUserSeedsSectorsAndIndustries()
+    {
+        $username = 'seederuser';
+        $email = 'seederuser@example.com';
+        $password = 'securepassword123';
+
+        $user = $this->userService->create($username, $email, $password);
+        $this->assertNotNull($user);
+
+        $sectors = Sector::find()->where(['user_id' => $user->id])->all();
+        $this->assertNotEmpty($sectors);
+
+        $industries = Industry::find()->where(['user_id' => $user->id])->all();
+        $this->assertNotEmpty($industries);
+    }
+
+
+    public function testCreateUserSeedsMetricTypes()
+    {
+        $username = 'metricuser';
+        $email = 'metricuser@example.com';
+        $password = 'securepassword123';
+
+        $user = $this->userService->create($username, $email, $password);
+        $this->assertNotNull($user);
+
+        $metricTypes = MetricType::find()->where(['user_id' => $user->id])->all();
+        $this->assertNotEmpty($metricTypes);
+    }
+
 
     public function testCreateUserWithException()
     {
