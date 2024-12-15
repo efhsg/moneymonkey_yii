@@ -1,5 +1,8 @@
 FROM php:8.2-fpm
 
+# TZ
+RUN echo "date.timezone=Europe/Amsterdam" > /usr/local/etc/php/conf.d/timezone.ini
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     zip \

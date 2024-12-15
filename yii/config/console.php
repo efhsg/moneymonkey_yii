@@ -10,7 +10,7 @@ $config = [
     'controllerNamespace' => 'app\commands',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
         '@tests' => '@app/tests',
     ],
     'components' => [
@@ -25,6 +25,10 @@ $config = [
                 ],
             ],
         ],
+        'formatter' => [
+            'defaultTimeZone' => 'Europe/Amsterdam',
+        ],
+        'timeZone' => 'Europe/Amsterdam',
         'db' => $db,
     ],
     'params' => $params,

@@ -54,6 +54,10 @@ $config = [
             ],
         ],
         'db' => $db,
+        'formatter' => [
+            'defaultTimeZone' => 'Europe/Amsterdam',
+        ],
+        'timeZone' => 'Europe/Amsterdam',
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,

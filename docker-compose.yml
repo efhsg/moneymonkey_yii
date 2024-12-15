@@ -61,6 +61,7 @@ services:
       MYSQL_DATABASE_TEST: ${DB_DATABASE_TEST}      
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+      TZ: Europe/Amsterdam
     ports:
       - "${DB_PORT:-3306}:3306"
     volumes:
