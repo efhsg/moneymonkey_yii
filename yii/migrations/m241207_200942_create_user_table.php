@@ -28,11 +28,6 @@ class m241207_200942_create_user_table extends Migration
             'deleted_at' => $this->integer()->null(),
         ], $tableOptions);
 
-        $this->createIndex('idx-user-username', 'user', 'username', true);
-        $this->createIndex('idx-user-email', 'user', 'email', true);
-        $this->createIndex('idx-user-password_reset_token', 'user', 'password_reset_token', true);
-        $this->createIndex('idx-user-access_token', 'user', 'access_token', true);
-
     }
 
     public function safeDown(): void

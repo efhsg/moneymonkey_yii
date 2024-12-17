@@ -65,7 +65,7 @@ class m241213_232008_create_config_tables extends Migration
             'id',
             'CASCADE'
         );
-        $this->createIndex('idx-industries-name', 'industries', 'name', true);
+        $this->createIndex('idx-sector_id-industries-name', 'industries', ['sector_id', 'name'], true);
 
         $this->createTable('stocks', [
             'id' => $this->primaryKey(),
@@ -85,7 +85,7 @@ class m241213_232008_create_config_tables extends Migration
             'id',
             'CASCADE'
         );
-        $this->createIndex('idx-stocks-ticker', 'stocks', 'ticker', true);
+        $this->createIndex('idx-idustry_id-stocks-ticker', 'stocks', ['industry_id', 'ticker'], true);
         $this->createIndex('idx-stocks-created_at', 'stocks', 'created_at');
         $this->createIndex('idx-stocks-updated_at', 'stocks', 'updated_at');
 
@@ -103,12 +103,18 @@ class m241213_232008_create_config_tables extends Migration
             'id',
             'CASCADE'
         );
+        $this->createIndex(
+            'idx-stock_id-date_recorded',
+            'dividend_yields',
+            ['stock_id', 'date_recorded'],
+            true
+        );
 
         $this->createTable('financial_metrics', [
             'id' => $this->primaryKey(),
             'stock_id' => $this->integer()->notNull(),
             'metric_type_id' => $this->integer()->notNull(),
-            'metric_value' => $this->bigInteger()->notNull(), // stored in smallest unit
+            'metric_value' => $this->bigInteger()->notNull(),
             'date_recorded' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP')->notNull(),
         ]);
         $this->addForeignKey(
@@ -126,6 +132,12 @@ class m241213_232008_create_config_tables extends Migration
             'metric_types',
             'id',
             'CASCADE'
+        );
+        $this->createIndex(
+            'idx-stock_id-metric_type_id-date_recorded',
+            'financial_metrics',
+            ['stock_id', 'metric_type_id', 'date_recorded'],
+            true
         );
 
         $this->createTable('stock_data', [
@@ -151,7 +163,7 @@ class m241213_232008_create_config_tables extends Migration
             'id',
             'CASCADE'
         );
-        $this->createIndex('idx-stock_data-stock_id-source_id-date_recorded', 'stock_data', ['stock_id', 'source_id', 'date_recorded']);
+        $this->createIndex('idx-stock_data-stock_id-source_id-date_recorded', 'stock_data', ['stock_id', 'source_id', 'date_recorded'], true);
 
         $this->createTable('stock_price_history', [
             'id' => $this->primaryKey(),
@@ -167,6 +179,13 @@ class m241213_232008_create_config_tables extends Migration
             'id',
             'CASCADE'
         );
+        $this->createIndex(
+            'idx-unique-stock_price_history-stock_id-date_recorded',
+            'stock_price_history',
+            ['stock_id', 'date_recorded'],
+            true
+        );
+
     }
 
     public function safeDown()
