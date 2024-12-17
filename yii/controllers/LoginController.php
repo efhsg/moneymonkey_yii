@@ -2,9 +2,13 @@
 
 namespace app\controllers;
 
-use app\models\LoginForm;
+use app\services\UserService;
 use Yii;
 
+use app\models\{
+    LoginForm,
+    SignupForm
+};
 use yii\web\{
     Controller,
     Response
@@ -30,4 +34,21 @@ class LoginController extends Controller
         Yii::$app->user->logout();
         return $this->goHome();
     }
+
+    public function actionSignup(): Response|string
+    {
+        $model = new SignupForm(new UserService());
+
+        if (Yii::$app->request->isPost) {
+            $model->load(Yii::$app->request->post());
+
+            if ($user = $model->signup()) {
+                Yii::$app->session->setFlash('success', 'Registration successful! You can now log in.');
+                return $this->redirect(['login/login']);
+            }
+        }
+
+        return $this->render('signup', ['model' => $model]);
+    }
+
 }

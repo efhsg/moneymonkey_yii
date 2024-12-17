@@ -43,7 +43,8 @@ class UserService
         } catch (\Throwable $e) {
             $transaction->rollBack();
             Yii::error("Unexpected error creating user '{$username}': " . $e->getMessage(), __METHOD__);
-            throw new UserCreationException("An unexpected error occurred while creating the user.", 0, $e);
+            $errorMessage = "An unexpected error occurred while creating the user: " . $e->getMessage();
+            throw new UserCreationException($errorMessage, 0, $e);
         }
     }
 

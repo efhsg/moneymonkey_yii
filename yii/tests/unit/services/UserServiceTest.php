@@ -54,7 +54,8 @@ class UserServiceTest extends Unit
         $sectors = Sector::find()->where(['user_id' => $user->id])->all();
         $this->assertNotEmpty($sectors);
 
-        $industries = Industry::find()->where(['user_id' => $user->id])->all();
+        $sectorIds = Sector::find()->select('id')->where(['user_id' => $user->id])->column();
+        $industries = Industry::find()->where(['sector_id' => $sectorIds])->all();
         $this->assertNotEmpty($industries);
     }
 

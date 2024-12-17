@@ -33,20 +33,21 @@ $this->beginContent('@app/views/layouts/_base.php'); ?>
 
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav ms-auto'],
-        'items' => [
-            ['label' => 'About', 'url' => ['/site/about']],
-            Yii::$app->user->isGuest
-            ? ['label' => 'Login', 'url' => ['/login/login']]
-            : '<li class="nav-item">'
-            . Html::beginForm(['/login/logout'])
+        'items' => Yii::$app->user->isGuest ? [
+            ['label' => 'Signup', 'url' => ['/login/signup']],
+            ['label' => 'Login', 'url' => ['/login/login']],
+        ] : [
+            '<li class="nav-item">'
+            . Html::beginForm(['/login/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                'Logout (' . Html::encode(Yii::$app->user->identity->username) . ')',
                 ['class' => 'nav-link btn btn-link logout']
             )
             . Html::endForm()
             . '</li>'
-        ]
+        ],
     ]);
+
     NavBar::end();
     ?>
 </header>

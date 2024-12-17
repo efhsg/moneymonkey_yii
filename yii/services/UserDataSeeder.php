@@ -159,7 +159,6 @@ class UserDataSeeder
             $sectorId = Yii::$app->db->getLastInsertID();
 
             foreach ($industries as $industryName) {
-                // Industries no longer have 'user_id'
                 Yii::$app->db->createCommand()->insert('{{%industries}}', [
                     'name' => $industryName,
                     'sector_id' => $sectorId,
