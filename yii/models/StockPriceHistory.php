@@ -11,16 +11,16 @@ use yii\db\{
  * This is the model class for table "stock_price_history".
  *
  * @property int $id
- * @property int $user_id
  * @property int $stock_id
- * @property float $price
+ * @property int $price
  * @property string $date_recorded
  *
  * @property Stock $stock
- * @property User $user
  */
 class StockPriceHistory extends ActiveRecord
 {
+    private const PRICE_FACTOR = 100;
+
     /**
      * {@inheritdoc}
      */
@@ -35,12 +35,17 @@ class StockPriceHistory extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['user_id', 'stock_id', 'price'], 'required'],
-            [['user_id', 'stock_id'], 'integer'],
-            [['price'], 'number'],
+            [['stock_id', 'price'], 'required'],
+            [['stock_id', 'price'], 'integer'],
+            ['price', 'integer', 'min' => 0, 'message' => 'Price must be a non-negative integer.'],
             [['date_recorded'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['stock_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stock::class, 'targetAttribute' => ['stock_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [
+                ['stock_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Stock::class,
+                'targetAttribute' => ['stock_id' => 'id']
+            ],
         ];
     }
 
@@ -51,9 +56,8 @@ class StockPriceHistory extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
             'stock_id' => 'Stock ID',
-            'price' => 'Price',
+            'price' => 'Price (in smallest unit)',
             'date_recorded' => 'Date Recorded',
         ];
     }
@@ -61,7 +65,7 @@ class StockPriceHistory extends ActiveRecord
     /**
      * Gets query for [[Stock]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getStock(): ActiveQuery
     {
@@ -69,12 +73,22 @@ class StockPriceHistory extends ActiveRecord
     }
 
     /**
-     * Gets query for [[User]].
+     * Set the price in decimal form and convert it to integer for storage.
      *
-     * @return \yii\db\ActiveQuery
+     * @param float|int $value
      */
-    public function getUser(): ActiveQuery
+    public function setPriceDecimal(float|int $value): void
     {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
+        $this->price = (int) round($value * self::PRICE_FACTOR);
+    }
+
+    /**
+     * Get the price in decimal form.
+     *
+     * @return float
+     */
+    public function getPriceDecimal(): float
+    {
+        return $this->price !== null ? $this->price / self::PRICE_FACTOR : 0.0;
     }
 }

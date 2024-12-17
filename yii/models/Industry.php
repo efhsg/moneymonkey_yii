@@ -11,13 +11,11 @@ use yii\db\{
  * This is the model class for table "industries".
  *
  * @property int $id
- * @property int $user_id
  * @property string $name
  * @property int $sector_id
  *
  * @property Sector $sector
  * @property Stock[] $stocks
- * @property User $user
  */
 class Industry extends ActiveRecord
 {
@@ -32,15 +30,25 @@ class Industry extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            [['user_id', 'name', 'sector_id'], 'required'],
-            [['user_id', 'sector_id'], 'integer'],
+            [['name', 'sector_id'], 'required'],
+            [['sector_id'], 'integer'],
             [['name'], 'string', 'max' => 100],
-            [['name'], 'unique'],
-            [['sector_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sector::class, 'targetAttribute' => ['sector_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [
+                ['sector_id', 'name'],
+                'unique',
+                'targetAttribute' => ['sector_id', 'name'],
+                'message' => 'The industry name has already been taken in this sector.'
+            ],
+            [
+                ['sector_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Sector::class,
+                'targetAttribute' => ['sector_id' => 'id']
+            ],
         ];
     }
 
@@ -51,7 +59,6 @@ class Industry extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
             'name' => 'Name',
             'sector_id' => 'Sector ID',
         ];
@@ -60,7 +67,7 @@ class Industry extends ActiveRecord
     /**
      * Gets query for [[Sector]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getSector(): ActiveQuery
     {
@@ -68,22 +75,12 @@ class Industry extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Stock]].
+     * Gets query for [[Stocks]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getStocks(): ActiveQuery
     {
         return $this->hasMany(Stock::class, ['industry_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[User]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUser(): ActiveQuery
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 }

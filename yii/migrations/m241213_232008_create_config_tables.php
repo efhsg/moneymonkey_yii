@@ -72,8 +72,8 @@ class m241213_232008_create_config_tables extends Migration
             'industry_id' => $this->integer()->notNull(),
             'ticker' => $this->string(10)->notNull(),
             'company_name' => $this->string(255)->notNull(),
-            'market_cap' => $this->decimal(20, 2),
-            'price' => $this->decimal(15, 4)->notNull()->check('price >= 0'),
+            'market_cap' => $this->bigInteger(),
+            'price' => $this->bigInteger()->notNull(),
             'created_at' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP')->notNull(),
             'updated_at' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP')->notNull(),
         ]);
@@ -92,7 +92,7 @@ class m241213_232008_create_config_tables extends Migration
         $this->createTable('dividend_yields', [
             'id' => $this->primaryKey(),
             'stock_id' => $this->integer()->notNull(),
-            'yield_value' => $this->decimal(10, 4)->notNull()->check('yield_value >= 0'),
+            'yield_value' => $this->integer()->notNull(),
             'date_recorded' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP')->notNull(),
         ]);
         $this->addForeignKey(
@@ -108,7 +108,7 @@ class m241213_232008_create_config_tables extends Migration
             'id' => $this->primaryKey(),
             'stock_id' => $this->integer()->notNull(),
             'metric_type_id' => $this->integer()->notNull(),
-            'metric_value' => $this->decimal(15, 2)->notNull()->check('metric_value >= 0'),
+            'metric_value' => $this->bigInteger()->notNull(), // stored in smallest unit
             'date_recorded' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP')->notNull(),
         ]);
         $this->addForeignKey(
@@ -156,7 +156,7 @@ class m241213_232008_create_config_tables extends Migration
         $this->createTable('stock_price_history', [
             'id' => $this->primaryKey(),
             'stock_id' => $this->integer()->notNull(),
-            'price' => $this->decimal(15, 4)->notNull(),
+            'price' => $this->bigInteger()->notNull(),
             'date_recorded' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP')->notNull(),
         ]);
         $this->addForeignKey(

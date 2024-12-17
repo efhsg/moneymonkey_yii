@@ -11,7 +11,6 @@ use yii\db\{
  * This is the model class for table "stock_data".
  *
  * @property int $id
- * @property int $user_id
  * @property int $stock_id
  * @property int $source_id
  * @property string $date_recorded
@@ -19,7 +18,6 @@ use yii\db\{
  *
  * @property DataSource $source
  * @property Stock $stock
- * @property User $user
  */
 class StockData extends ActiveRecord
 {
@@ -37,12 +35,23 @@ class StockData extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['user_id', 'stock_id', 'source_id', 'date_recorded', 'data'], 'required'],
-            [['user_id', 'stock_id', 'source_id'], 'integer'],
+            [['stock_id', 'source_id', 'date_recorded', 'data'], 'required'],
+            [['stock_id', 'source_id'], 'integer'],
             [['date_recorded'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['source_id'], 'exist', 'skipOnError' => true, 'targetClass' => DataSource::class, 'targetAttribute' => ['source_id' => 'id']],
-            [['stock_id'], 'exist', 'skipOnError' => true, 'targetClass' => Stock::class, 'targetAttribute' => ['stock_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [
+                ['source_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => DataSource::class,
+                'targetAttribute' => ['source_id' => 'id']
+            ],
+            [
+                ['stock_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Stock::class,
+                'targetAttribute' => ['stock_id' => 'id']
+            ],
         ];
     }
 
@@ -53,7 +62,6 @@ class StockData extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
             'stock_id' => 'Stock ID',
             'source_id' => 'Source ID',
             'date_recorded' => 'Date Recorded',
@@ -64,7 +72,7 @@ class StockData extends ActiveRecord
     /**
      * Gets query for [[Source]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getSource(): ActiveQuery
     {
@@ -74,20 +82,10 @@ class StockData extends ActiveRecord
     /**
      * Gets query for [[Stock]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getStock(): ActiveQuery
     {
         return $this->hasOne(Stock::class, ['id' => 'stock_id']);
-    }
-
-    /**
-     * Gets query for [[User]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUser(): ActiveQuery
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 }
