@@ -148,4 +148,28 @@ class UserServiceTest extends Unit
 
         verify($result)->false();
     }
+
+    public function testHardDelete()
+    {
+        $user = User::findOne(100);
+        $this->assertNotNull($user);
+
+        $result = $this->userService->hardDelete($user);
+
+        $this->assertTrue($result);
+        $deletedUser = User::findOne(100);
+        $this->assertNull($deletedUser);
+    }
+
+    public function testHardDeleteFails()
+    {
+        $user = $this->createMock(User::class);
+        $user->method('delete')->willThrowException(new \Exception('Delete operation failed'));
+
+        $result = $this->userService->hardDelete($user);
+
+        $this->assertFalse($result);
+    }
+
+
 }

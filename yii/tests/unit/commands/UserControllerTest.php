@@ -88,4 +88,68 @@ class UserControllerTest extends Unit
         $this->assertEquals(ExitCode::UNSPECIFIED_ERROR, $exitCode);
     }
 
+    public function testActionDeleteSoftDeleteSuccess()
+    {
+        $username = 'admin';
+        $user = User::findOne(['username' => $username]);
+        $this->assertNotNull($user, 'The user must exist before the test.');
+
+        $mockUserService = $this->createMock(UserService::class);
+        $mockUserService->method('softDelete')->willReturnCallback(function ($user) {
+            $user->deleted_at = time();
+            return $user->save(false);
+        });
+
+        $controller = new class ('user', Yii::$app, $mockUserService) extends UserController {
+            public function stdout($string)
+            {
+            }
+            public function stderr($string)
+            {
+            }
+            public function prompt($message, $options = [])
+            {
+                return 'soft';
+            }
+        };
+
+        $exitCode = $controller->actionDelete($username);
+        $this->assertEquals(ExitCode::OK, $exitCode, 'Soft delete should return ExitCode::OK');
+
+        $user->refresh();
+        $this->assertNotNull($user->deleted_at, 'The user should be marked as soft deleted.');
+    }
+
+    public function testActionDeleteHardDeleteSuccess()
+    {
+        $username = 'admin';
+        $user = User::findOne(['username' => $username]);
+        $this->assertNotNull($user, 'The user must exist before the test.');
+
+        $mockUserService = $this->createMock(UserService::class);
+        $mockUserService->method('hardDelete')->willReturnCallback(function ($user) {
+            return $user->delete() !== false;
+        });
+
+        $controller = new class ('user', Yii::$app, $mockUserService) extends UserController {
+            public function stdout($string)
+            {
+            }
+            public function stderr($string)
+            {
+            }
+            public function prompt($message, $options = [])
+            {
+                return 'hard';
+            }
+        };
+
+        $exitCode = $controller->actionDelete($username);
+        $this->assertEquals(ExitCode::OK, $exitCode, 'Hard delete should return ExitCode::OK');
+
+        $deletedUser = User::findOne(['username' => $username]);
+        $this->assertNull($deletedUser, 'The user should be fully removed after a hard delete.');
+    }
+
+
 }

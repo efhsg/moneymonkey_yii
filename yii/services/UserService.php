@@ -78,6 +78,16 @@ class UserService
         return $this->updateUserAttribute($user, 'deleted_at', null);
     }
 
+    public function hardDelete(User $user): bool
+    {
+        try {
+            return (bool) $user->delete();
+        } catch (\Throwable $e) {
+            Yii::error("Error permanently deleting user ID {$user->id}: " . $e->getMessage(), __METHOD__);
+            return false;
+        }
+    }
+
     private function createUserInstance(string $username, string $email, string $password): User
     {
         $user = new User();
