@@ -7,6 +7,7 @@ use app\models\User;
 use Codeception\Stub;
 use app\models\SignupForm;
 use app\services\UserService;
+use yii\captcha\CaptchaValidator;
 
 class SignupFormTest extends \Codeception\Test\Unit
 {
@@ -25,10 +26,19 @@ class SignupFormTest extends \Codeception\Test\Unit
             }
         ]);
 
+        $captchaValidator = Stub::make(CaptchaValidator::class, [
+            'validateAttribute' => function () {
+                return true;
+            }
+        ]);
+
+        Yii::$container->set(CaptchaValidator::class, $captchaValidator);
+
         $model = new SignupForm($userService, [
             'username' => 'newuser',
             'email' => 'newuser@example.com',
             'password' => 'securepassword',
+            'captcha' => 'correct-captcha-value',
         ]);
 
         $user = $model->signup();

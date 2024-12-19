@@ -14,6 +14,7 @@ class SignupForm extends Model
     public string $username = '';
     public string $email = '';
     public string $password = '';
+    public $captcha = Null;
 
     private UserService $userService;
 
@@ -28,6 +29,8 @@ class SignupForm extends Model
         return [
             [['username', 'email', 'password'], 'required'],
             [['password'], 'string', 'min' => 3, 'max' => 255],
+            ['email', 'email'],
+            ['captcha', 'captcha'],
         ];
     }
 

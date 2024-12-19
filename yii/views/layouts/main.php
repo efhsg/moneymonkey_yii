@@ -25,7 +25,7 @@ $this->beginContent('@app/views/layouts/_base.php'); ?>
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav me-auto'],
         'items' => [
-            ['label' => 'Configuration', 'url' => ['/site/configuration']],
+            ['label' => 'Configuration', 'url' => ['/config/configuration']],
             ['label' => 'Stock analysis', 'url' => ['/site/stock-analyis']],
             ['label' => 'Portfolio management', 'url' => ['/site/portfolio-management']],
         ]

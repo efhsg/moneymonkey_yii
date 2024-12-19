@@ -16,6 +16,21 @@ use yii\web\{
 
 class LoginController extends Controller
 {
+
+    public function actions(): array
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        ];
+    }
+
+
     public function actionLogin(): Response|string
     {
         $loginForm = new LoginForm();
