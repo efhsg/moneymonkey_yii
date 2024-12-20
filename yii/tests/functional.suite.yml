@@ -9,6 +9,15 @@
 actor: FunctionalTester
 modules:
     enabled:
-      - Filesystem
-      - Yii2
-      - Asserts
+        - Filesystem
+        - Yii2
+        - Asserts
+        - Db
+    config:
+        Db:
+            dsn: 'mysql:host=%DB_HOST%;port=%DB_PORT%;dbname=%DB_DATABASE_TEST%'
+            user: '%DB_USER%'
+            password: '%DB_PASSWORD%'
+            charset: 'utf8'
+            cleanup: true
+
