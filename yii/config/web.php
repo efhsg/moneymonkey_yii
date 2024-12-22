@@ -25,6 +25,7 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
             'authTimeout' => 3600 * 24 * 30,
+            'loginUrl' => ['/login/login'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -64,6 +65,11 @@ $config = [
             'showScriptName' => false,
             'rules' => [
             ],
+        ],
+    ],
+    'modules' => [
+        'config' => [
+            'class' => 'app\modules\config\ConfigModule',
         ],
     ],
     'params' => $params,

@@ -1,11 +1,14 @@
 <?php
 
-namespace app\models;
+namespace app\modules\config\models;
 
 use yii\db\{
     ActiveQuery,
     ActiveRecord
 };
+use app\models\Stock;
+use app\models\StockData;
+use app\models\User;
 
 /**
  * This is the model class for table "data_sources".
@@ -15,7 +18,7 @@ use yii\db\{
  * @property string $name
  * @property string|null $website
  *
- * @property StockData[] $stockDatas
+ * @property StockData[] $stockData
  * @property User $user
  */
 class DataSource extends ActiveRecord

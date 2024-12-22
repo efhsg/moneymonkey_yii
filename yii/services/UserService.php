@@ -6,7 +6,6 @@ use app\exceptions\UserCreationException;
 use app\models\User;
 use app\traits\ValidationErrorFormatterTrait;
 use Exception;
-use yii\db\Transaction;
 use Yii;
 
 class UserService

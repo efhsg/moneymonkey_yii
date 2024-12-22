@@ -2,11 +2,12 @@
 
 namespace tests\unit\services;
 
+use app\modules\config\models\Industry;
+use app\modules\config\models\MetricType;
+use app\modules\config\models\Sector;
+use PHPUnit\Framework\MockObject\Exception;
 use Yii;
 use app\models\User;
-use app\models\Sector;
-use app\models\Industry;
-use app\models\MetricType;
 use Codeception\Test\Unit;
 use app\services\UserService;
 use tests\fixtures\UserFixture;
@@ -15,12 +16,12 @@ class UserServiceTest extends Unit
 {
     private UserService $userService;
 
-    protected function _before()
+    protected function _before(): void
     {
         $this->userService = Yii::$container->get(UserService::class);
     }
 
-    public function _fixtures()
+    public function _fixtures(): array
     {
         return [
             'users' => UserFixture::class,
@@ -161,6 +162,9 @@ class UserServiceTest extends Unit
         $this->assertNull($deletedUser);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testHardDeleteFails()
     {
         $user = $this->createMock(User::class);

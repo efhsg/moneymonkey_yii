@@ -1,11 +1,9 @@
 <?php
 
-namespace app\models;
+namespace app\modules\config\models;
 
-use yii\db\{
-    ActiveQuery,
-    ActiveRecord
-};
+use app\models\Stock;
+use yii\db\{ActiveQuery, ActiveRecord};
 
 /**
  * This is the model class for table "financial_metrics".

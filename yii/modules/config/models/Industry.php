@@ -1,11 +1,12 @@
 <?php
 
-namespace app\models;
+namespace app\modules\config\models;
 
 use yii\db\{
     ActiveQuery,
     ActiveRecord
 };
+use app\models\Stock;
 
 /**
  * This is the model class for table "industries".

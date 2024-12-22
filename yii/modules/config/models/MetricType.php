@@ -1,38 +1,40 @@
 <?php
 
-namespace app\models;
+namespace app\modules\config\models;
 
+use app\models\User;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "sectors".
+ * This is the model class for table "metric_types".
  *
  * @property int $id
  * @property int $user_id
  * @property string $name
  *
- * @property Industry[] $industries
+ * @property FinancialMetric[] $financialMetrics
  * @property User $user
  */
-class Sector extends ActiveRecord
+class MetricType extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'sectors';
+        return 'metric_types';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['user_id', 'name'], 'required'],
             [['user_id'], 'integer'],
-            [['name'], 'string', 'max' => 100],
+            [['name'], 'string', 'max' => 50],
             [['name'], 'unique'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -41,7 +43,7 @@ class Sector extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -51,21 +53,21 @@ class Sector extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Industries]].
+     * Gets query for [[FinancialMetrics]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getIndustries()
+    public function getFinancialMetrics(): ActiveQuery
     {
-        return $this->hasMany(Industry::class, ['sector_id' => 'id']);
+        return $this->hasMany(FinancialMetric::class, ['metric_type_id' => 'id']);
     }
 
     /**
      * Gets query for [[User]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getUser()
+    public function getUser(): ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
