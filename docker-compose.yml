@@ -13,10 +13,10 @@ services:
     environment:
       TZ: ${TIMEZONE:-Europe/Amsterdam}
     extra_hosts:
-        - 'host.docker.internal:host-gateway'      
-    ports:
-        - '9000:9000'
-        - '9003:9003'
+        - 'host.docker.internal:host-gateway'
+    # Disable for PHP Storm, enable for VS Code (yeah, it sucks)
+    # ports:
+    #     - '9003:9003'
     env_file:
       - .env
     volumes:
