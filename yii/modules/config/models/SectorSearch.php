@@ -41,8 +41,13 @@ class SectorSearch extends Sector
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+            'sort' => [
+                'defaultOrder' => ['name' => SORT_ASC],
+            ],
         ]);
-
         $this->load($params);
 
         if (!$this->validate()) {
