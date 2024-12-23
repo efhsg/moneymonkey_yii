@@ -31,17 +31,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'tableOptions' => [
                     'class' => 'table table-striped table-hover mb-0',
                 ],
-                // Configure the pager for a more "Bootstrap 5–like" appearance
                 'pager' => [
-                    'options' => ['class' => 'pagination justify-content-center m-3'], // container for pagination links
-                    'linkOptions' => ['class' => 'page-link'],                        // each link
-                    'disabledListItemSubTagOptions' => ['class' => 'page-link'],      // disabled link
+                    'options' => ['class' => 'pagination justify-content-center m-3'],
+                    'linkOptions' => ['class' => 'page-link'],
+                    'disabledListItemSubTagOptions' => ['class' => 'page-link'],
                     'prevPageLabel' => 'Previous',
                     'nextPageLabel' => 'Next',
                     'firstPageLabel' => 'First',
                     'lastPageLabel' => 'Last',
 
-                    // Classes for the <li> wrapper
                     'pageCssClass' => 'page-item',
                     'firstPageCssClass' => 'page-item',
                     'lastPageCssClass' => 'page-item',
