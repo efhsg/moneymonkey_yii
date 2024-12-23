@@ -15,6 +15,7 @@ use yii\db\ActiveRecord;
  *
  * @property Industry[] $industries
  * @property User $user
+ * @property int $industriesCount Read-only computed attribute for the count of industries.
  */
 class Sector extends ActiveRecord
 {
@@ -70,5 +71,15 @@ class Sector extends ActiveRecord
     public function getUser(): ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * Read-only computed attribute for the count of industries.
+     *
+     * @return int
+     */
+    public function getIndustriesCount(): int
+    {
+        return $this->getIndustries()->count();
     }
 }

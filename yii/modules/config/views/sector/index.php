@@ -28,8 +28,13 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'filterModel'  => $searchModel,
+                'summary'      => '<strong>{begin}</strong> to <strong>{end}</strong> out of <strong>{totalCount}</strong>',
+                'summaryOptions' => ['class' => 'text-start m-2'],
+                'layout'       => "{items}\n<div class='d-flex justify-content-between align-items-center'><div>{summary}</div><div class='d-flex justify-content-center flex-grow-1'>{pager}</div></div>",
                 'tableOptions' => [
                     'class' => 'table table-striped table-hover mb-0',
+                    'data-responsive' => 'true',
+                    'aria-label' => 'Sector Table',
                 ],
                 'pager' => [
                     'options' => ['class' => 'pagination justify-content-center m-3'],
@@ -50,6 +55,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'columns' => [
                     'name',
+                    [
+                        'attribute' => 'industries_count',
+                        'label' => 'Industries',
+                        'value' => function ($model) {
+                            return $model->industriesCount;
+                        },
+                        'filter' => false,
+                    ],
                     [
                         'class' => ActionColumn::class,
                         'urlCreator' => function ($action, Sector $model, $key, $index, $column) {

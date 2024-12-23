@@ -5,11 +5,11 @@ namespace app\modules\config\controllers;
 use app\modules\config\models\Sector;
 use app\modules\config\models\SectorSearch;
 use Throwable;
+use Yii;
+use yii\data\ActiveDataProvider;
 use yii\db\Exception;
 use yii\db\StaleObjectException;
 use yii\filters\VerbFilter;
-use Yii;
-
 use yii\web\{Controller, NotFoundHttpException, Response};
 
 /**
@@ -63,15 +63,20 @@ class SectorController extends Controller
     }
 
     /**
-     * Displays a single Sector model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
+     * @throws NotFoundHttpException
      */
-    public function actionView($id): string
+    public function actionView($id) : Response|string
     {
+        $model = $this->findModel($id);
+
+        $industriesDataProvider = new ActiveDataProvider([
+            'query' => $model->getIndustries(),
+            'pagination' => ['pageSize' => 10],
+        ]);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'industriesDataProvider' => $industriesDataProvider,
         ]);
     }
 

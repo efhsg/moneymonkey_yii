@@ -1,26 +1,23 @@
 <?php
 
 use app\modules\config\models\Sector;
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap5\{ActiveForm, Html};
 
-/** @var yii\web\View $this */
-/** @var Sector $model */
 /** @var yii\widgets\ActiveForm $form */
+/** @var Sector $model */
 ?>
 
-<div class="sector-form">
+<?php $form = ActiveForm::begin([
+    'id' => 'sector-form',
+]); ?>
 
-    <?php $form = ActiveForm::begin(); ?>
+<?= $form->field($model, 'name')->textInput([
+    'placeholder' => 'Enter sector name',
+]) ?>
 
-    <?= $form->field($model, 'user_id')->textInput() ?>
-
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
-
+<div class="form-group mt-4 text-end">
+    <?= Html::a('Cancel', ['index'], ['class' => 'btn btn-secondary me-2']) ?>
+    <?= Html::submitButton('Save', ['class' => 'btn btn-primary']) ?>
 </div>
+
+<?php ActiveForm::end(); ?>

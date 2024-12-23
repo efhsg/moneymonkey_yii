@@ -11,6 +11,9 @@ use yii\data\ActiveDataProvider;
  */
 class SectorSearch extends Sector
 {
+
+    public $industries_count;
+
     /**
      * {@inheritdoc}
      */
@@ -19,6 +22,7 @@ class SectorSearch extends Sector
         return [
             [['id', 'user_id'], 'integer'],
             [['name'], 'safe'],
+            [['industries_count'], 'integer'],
         ];
     }
 
@@ -37,7 +41,12 @@ class SectorSearch extends Sector
             throw new \InvalidArgumentException('User ID must be provided for SectorSearch.');
         }
 
-        $query = Sector::find()->where(['user_id' => $userId]);
+        $query = Sector::find()
+            ->select([
+                'sectors.*',
+                'industries_count' => '(SELECT COUNT(*) FROM industries WHERE industries.sector_id = sectors.id)',
+            ])
+            ->where(['user_id' => $userId]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -46,11 +55,19 @@ class SectorSearch extends Sector
             ],
             'sort' => [
                 'defaultOrder' => ['name' => SORT_ASC],
+                'attributes' => [
+                    'name',
+                    'industries_count' => [
+                        'asc' => ['industries_count' => SORT_ASC],
+                        'desc' => ['industries_count' => SORT_DESC],
+                    ],
+                ],
             ],
         ]);
         $this->load($params);
 
         if (!$this->validate()) {
+            $query->where('0=1');
             return $dataProvider;
         }
 

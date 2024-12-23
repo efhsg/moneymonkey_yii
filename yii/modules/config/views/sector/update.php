@@ -1,5 +1,6 @@
 <?php
 
+use app\helpers\BreadcrumbHelper;
 use app\modules\config\models\Sector;
 use yii\helpers\Html;
 
@@ -7,16 +8,21 @@ use yii\helpers\Html;
 /** @var Sector $model */
 
 $this->title = 'Update Sector: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Sectors', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+
+$this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs('Sectors', 'index', $model, 'Update');
+
 ?>
-<div class="sector-update">
+<div class="sector-update container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="border rounded p-4 shadow bg-white mt-4">
+                <h3 class="mb-4 text-center"><?= Html::encode($this->title) ?></h3>
+                <p class="text-start">Please update the following fields:</p>
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
+                <?= $this->render('_form', [
+                    'model' => $model,
+                ]) ?>
+            </div>
+        </div>
+    </div>
 </div>
