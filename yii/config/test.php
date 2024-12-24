@@ -1,26 +1,21 @@
 <?php
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/test_db.php';
 
-/**
- * Application configuration shared by all test types
- */
-return [
-    'id' => 'basic-tests',
-    'basePath' => dirname(__DIR__),
-    'aliases' => [
-        '@bower' => '@vendor/bower-asset',
-        '@npm' => '@vendor/npm-asset',
-    ],
-    'language' => 'en-US',
+use yii\helpers\ArrayHelper;
+use yii\symfonymailer\Mailer;
+
+$main = require __DIR__ . '/main.php';
+$params = require __DIR__ . '/params.php';
+
+return ArrayHelper::merge($main, [
+    'id'       => 'basic-tests',
     'components' => [
-        'db' => $db,
+        'db' => require __DIR__ . '/test_db.php',
+
         'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
-            'viewPath' => '@app/mail',
-            // send all mails to a file by default.
+            'class'          => Mailer::class,
+            'viewPath'       => '@app/mail',
             'useFileTransport' => true,
-            'messageClass' => 'yii\symfonymailer\Message'
+            'messageClass'   => 'yii\symfonymailer\Message',
         ],
         'assetManager' => [
             'basePath' => __DIR__ . '/../web/assets',
@@ -29,20 +24,15 @@ return [
             'showScriptName' => true,
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass'   => 'app\models\User',
             'enableAutoLogin' => true,
-            'authTimeout' => 3600 * 24 * 30,
+            'authTimeout'     => 3600 * 24 * 30,
         ],
         'request' => [
             'cookieValidationKey' => 'test',
             'enableCsrfValidation' => false,
-            // but if you absolutely need it set cookie domain to localhost
-            /*
-            'csrfCookie' => [
-                'domain' => 'localhost',
-            ],
-            */
         ],
     ],
+
     'params' => $params,
-];
+]);

@@ -1,49 +1,28 @@
 <?php
 
+use yii\helpers\ArrayHelper;
+
+$main = require __DIR__ . '/main.php';
 $params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
 
 $config = [
-    'id' => 'basic',
+    'id'   => 'basic',
     'name' => 'MoneyMonkey',
-    'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
-    'aliases' => [
-        '@bower' => '@vendor/bower-asset',
-        '@npm' => '@vendor/npm-asset',
-    ],
-    'timeZone' => 'Europe/Amsterdam',
+
     'components' => [
+        'db' => require __DIR__ . '/db.php',
+
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'IwE5i3d_0AhHc5a7gnVMSk38YDzgqBYi',
-        ],
-        'cache' => [
-            'class' => 'yii\caching\FileCache',
-        ],
-        'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
-            'authTimeout' => 3600 * 24 * 30,
-            'loginUrl' => ['/login/login'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
-            'viewPath' => '@app/mail',
-            // send all mails to a file by default.
-            'useFileTransport' => true,
-        ],
-        'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
-            'targets' => [
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
-                ],
-            ],
+        'user' => [
+            'identityClass'   => 'app\models\User',
+            'enableAutoLogin' => true,
+            'authTimeout'     => 3600 * 24 * 30,
+            'loginUrl'        => ['/login/login'],
         ],
         'assetManager' => [
             'bundles' => [
@@ -55,41 +34,28 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db,
-        'formatter' => [
-            'class' => 'yii\i18n\Formatter',
-            'defaultTimeZone' => 'Europe/Amsterdam',
-        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
+            'showScriptName'  => false,
+            'rules'           => [],
         ],
     ],
-    'modules' => [
-        'config' => [
-            'class' => 'app\modules\config\ConfigModule',
-        ],
-    ],
+
     'params' => $params,
 ];
 
 if (YII_ENV_DEV) {
-    // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
-        'class' => 'yii\debug\Module',
-        // uncomment the following to add your IP if you are not connecting from localhost.
+        'class'      => 'yii\debug\Module',
         'allowedIPs' => ['127.0.0.1', '::1', '172.*.*.*'],
     ];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',
-        // uncomment the following to add your IP if you are not connecting from localhost.
+        'class'      => 'yii\gii\Module',
         'allowedIPs' => ['127.0.0.1', '::1', '172.*.*.*'],
     ];
 }
 
-return $config;
+return ArrayHelper::merge($main, $config);

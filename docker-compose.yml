@@ -12,6 +12,7 @@ services:
     working_dir: /var/www/html/yii
     environment:
       TZ: ${TIMEZONE:-Europe/Amsterdam}
+      PHP_IDE_CONFIG: "serverName=Docker"
     extra_hosts:
         - 'host.docker.internal:host-gateway'
     # Disable for PHP Storm, enable for VS Code (yeah, it sucks)
