@@ -6,16 +6,12 @@ use app\exceptions\UserCreationException;
 use app\models\User;
 use app\services\UserService;
 use Yii;
-
-use yii\console\{
-    Controller,
-    ExitCode
-};
+use yii\console\{Controller, ExitCode};
 
 class UserController extends Controller
 {
 
-    protected $userService;
+    protected UserService $userService;
 
     public function __construct($id, $module, UserService $userService, $config = [])
     {
