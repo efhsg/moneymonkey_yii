@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterModel'  => $searchModel,
                 'summary'      => '<strong>{begin}</strong> to <strong>{end}</strong> out of <strong>{totalCount}</strong>',
                 'summaryOptions' => ['class' => 'text-start m-2'],
-                'layout'       => "{items}\n<div class='d-flex justify-content-between align-items-center'><div>{summary}</div><div class='d-flex justify-content-center flex-grow-1'>{pager}</div></div>",
+                'layout' => "{items}\n<div class='card-footer position-relative'><div class='position-absolute start-0 top-50 translate-middle-y'>{summary}</div><div class='text-center'>{pager}</div></div>",
                 'tableOptions' => [
                     'class' => 'table table-striped table-hover mb-0',
                     'data-responsive' => 'true',
@@ -53,6 +53,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     'activePageCssClass' => 'active',
                     'disabledPageCssClass' => 'disabled',
                 ],
+                'rowOptions' => function ($model, $key, $index, $grid) {
+                    return [
+                        'onclick' => 'window.location.href = "'
+                            . Url::to(['view', 'id' => $model->id]) . '";',
+                        'style' => 'cursor: pointer;',
+                    ];
+                },
                 'columns' => [
                     'name',
                     [
@@ -69,6 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             return Url::toRoute([$action, 'id' => $model->id]);
                         },
                         'template' => '{view} {update} {delete}',
+                        'buttonOptions' => ['data-confirm' => false],
                     ],
                 ],
             ]); ?>

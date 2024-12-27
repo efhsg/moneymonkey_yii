@@ -1,18 +1,21 @@
 <?php
 
+use app\helpers\BreadcrumbHelper;
+use app\modules\config\models\Sector;
+use yii\data\ActiveDataProvider;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\web\YiiAsset;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
-/** @var \app\modules\config\models\Sector $model */
-/** @var \yii\data\ActiveDataProvider $industriesDataProvider */
+/** @var Sector $model */
+/** @var ActiveDataProvider $industriesDataProvider */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Sectors', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+$this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs('Sectors', 'index', $model, 'View');
+YiiAsset::register($this);
 ?>
 <div class="sector-view container py-4">
 
@@ -23,7 +26,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= Html::a('Delete', ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger me-2',
                 'data' => [
-                    'confirm' => 'Are you sure you want to delete this item?',
                     'method' => 'post',
                 ],
             ]) ?>
@@ -53,9 +55,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-body p-0">
             <?= GridView::widget([
                 'dataProvider' => $industriesDataProvider,
-                'summary'      => '<strong>{begin}</strong> to <strong>{end}</strong> out of <strong>{totalCount}</strong>',
+                'summary' => '<strong>{begin}</strong> to <strong>{end}</strong> out of <strong>{totalCount}</strong>',
                 'summaryOptions' => ['class' => 'text-start m-2'],
-                'layout'       => "{items}\n<div class='d-flex justify-content-between align-items-center'><div>{summary}</div><div class='d-flex justify-content-center flex-grow-1'>{pager}</div></div>",
+                'layout' => "{items}"
+                    . "<div class='card-footer position-relative py-1 px-2'>"
+                    . "<div class='position-absolute start-0 top-50 translate-middle-y'>{summary}</div>"
+                    . "<div class='text-center'>{pager}</div>"
+                    . "</div>",
                 'tableOptions' => [
                     'class' => 'table table-striped table-hover mb-0',
                     'data-responsive' => 'true',

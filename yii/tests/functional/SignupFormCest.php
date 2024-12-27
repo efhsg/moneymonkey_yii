@@ -1,34 +1,37 @@
 <?php
 
+namespace tests\functional;
+
 use app\models\User;
 use app\services\UserService;
 use tests\fixtures\UserFixture;
+use Yii;
 
 class SignupFormCest
 {
 
     private UserService $userService;
 
-    public function _before(\FunctionalTester $I)
+    public function _before(\FunctionalTester $I): void
     {
         $this->userService = Yii::$container->get(UserService::class);
         $I->haveFixtures(['user' => UserFixture::class]);
         $I->amOnRoute('login/signup');
     }
 
-    public function openSignupPage(\FunctionalTester $I)
+    public function openSignupPage(\FunctionalTester $I): void
     {
         $I->see('Signup', 'h1');
     }
 
-    private function seeValidationErrors(\FunctionalTester $I, array $errors)
+    private function seeValidationErrors(\FunctionalTester $I, array $errors): void
     {
         foreach ($errors as $error) {
             $I->see($error);
         }
     }
 
-    public function signupWithEmptyFields(\FunctionalTester $I)
+    public function signupWithEmptyFields(\FunctionalTester $I): void
     {
         $I->seeElement('#signup-form');
         $I->submitForm('#signup-form', []);
@@ -40,7 +43,7 @@ class SignupFormCest
         ]);
     }
 
-    public function signupWithInvalidEmail(\FunctionalTester $I)
+    public function signupWithInvalidEmail(\FunctionalTester $I): void
     {
         $I->submitForm('#signup-form', [
             'SignupForm[username]' => 'newuser',
@@ -51,7 +54,7 @@ class SignupFormCest
         $this->seeValidationErrors($I, ['Email is not a valid email address.']);
     }
 
-    public function signupSuccessfully(\FunctionalTester $I)
+    public function signupSuccessfully(\FunctionalTester $I): void
     {
         $I->submitForm('#signup-form', [
             'SignupForm[username]' => 'uniqueuser456',

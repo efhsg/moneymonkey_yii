@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'user1' => [
+    'user1' => array(
         'id' => 100,
         'username' => 'admin',
         'auth_key' => 'test100key',
@@ -10,5 +10,5 @@ return [
         'email' => 'admin@example.com',
         'created_at' => time(),
         'updated_at' => time(),
-    ],
+    ),
 ];

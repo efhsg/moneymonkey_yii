@@ -4,11 +4,10 @@ namespace app\modules\config\controllers;
 
 use app\modules\config\models\Sector;
 use app\modules\config\models\SectorSearch;
-use Throwable;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Exception;
-use yii\db\StaleObjectException;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\{Controller, NotFoundHttpException, Response};
 
@@ -26,16 +25,16 @@ class SectorController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],
                 ],
                 'access' => [
-                    'class' => \yii\filters\AccessControl::class,
+                    'class' => AccessControl::class,
                     'rules' => [
                         [
-                            'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                            'actions' => ['index', 'view', 'create', 'update', 'delete', 'delete-confirm'],
                             'allow' => true,
                             'roles' => ['@'],
                         ],
@@ -65,7 +64,7 @@ class SectorController extends Controller
     /**
      * @throws NotFoundHttpException
      */
-    public function actionView($id) : Response|string
+    public function actionView($id): Response|string
     {
         $model = $this->findModel($id);
 
@@ -84,10 +83,14 @@ class SectorController extends Controller
      * Creates a new Sector model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|Response
+     * @throws Exception
      */
     public function actionCreate(): Response|string
     {
+
+        $userId = Yii::$app->user->id;
         $model = new Sector();
+        $model->user_id = $userId;
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -123,17 +126,37 @@ class SectorController extends Controller
     }
 
     /**
-     * Deletes an existing Sector model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return Response
-     * @throws NotFoundHttpException if the model cannot be found
-     * @throws Throwable
-     * @throws StaleObjectException
+     * @throws NotFoundHttpException
      */
-    public function actionDelete($id): Response
+    public function actionDeleteConfirm($id): string
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        $industries = $model->getIndustries()->with('stocks')->all();
+
+        return $this->render('delete-confirm', [
+            'model' => $model,
+            'industries' => $industries,
+        ]);
+    }
+
+
+    /**
+     * @throws NotFoundHttpException
+     */
+    public function actionDelete($id): Response|string
+    {
+        if (!Yii::$app->request->post('confirm')) {
+            return $this->actionDeleteConfirm($id);
+        }
+
+        $model = $this->findModel($id);
+        try {
+            $model->delete();
+            Yii::$app->session->setFlash('success', "Sector {$model->name} deleted successfully.");
+        } catch (\Throwable $e) {
+            Yii::$app->session->setFlash('error', 'Unable to delete the sector. Please try again later.');
+        }
 
         return $this->redirect(['index']);
     }

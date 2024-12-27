@@ -2,13 +2,20 @@
 
 namespace app\helpers;
 
-class BreadcrumbHelper {
+class BreadcrumbHelper
+{
     public static function generateModelBreadcrumbs(string $label, string $indexUrl, $model, string $actionLabel): array
     {
-        return [
+        $breadcrumbs = [
             ['label' => $label, 'url' => [$indexUrl]],
-            ['label' => $model->name, 'url' => ['view', 'id' => $model->id]],
-            $actionLabel,
         ];
+
+        if ($model !== null) {
+            $breadcrumbs[] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
+        }
+
+        $breadcrumbs[] = $actionLabel;
+
+        return $breadcrumbs;
     }
 }
