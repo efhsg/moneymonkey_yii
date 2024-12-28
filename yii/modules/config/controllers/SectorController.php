@@ -70,13 +70,29 @@ class SectorController extends Controller
 
         $industriesDataProvider = new ActiveDataProvider([
             'query' => $model->getIndustries(),
-            'pagination' => ['pageSize' => 10],
+            'pagination' => ['pageSize' => 20],
         ]);
 
         return $this->render('view', [
             'model' => $model,
             'industriesDataProvider' => $industriesDataProvider,
         ]);
+    }
+
+    /**
+     * Finds the Sector model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param int $id ID
+     * @return Sector the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id): Sector
+    {
+        if (($model = Sector::findOne(['id' => $id])) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 
     /**
@@ -128,22 +144,6 @@ class SectorController extends Controller
     /**
      * @throws NotFoundHttpException
      */
-    public function actionDeleteConfirm($id): string
-    {
-        $model = $this->findModel($id);
-
-        $industries = $model->getIndustries()->with('stocks')->all();
-
-        return $this->render('delete-confirm', [
-            'model' => $model,
-            'industries' => $industries,
-        ]);
-    }
-
-
-    /**
-     * @throws NotFoundHttpException
-     */
     public function actionDelete($id): Response|string
     {
         if (!Yii::$app->request->post('confirm')) {
@@ -162,18 +162,17 @@ class SectorController extends Controller
     }
 
     /**
-     * Finds the Sector model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Sector the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+     * @throws NotFoundHttpException
      */
-    protected function findModel($id): Sector
+    public function actionDeleteConfirm($id): string
     {
-        if (($model = Sector::findOne(['id' => $id])) !== null) {
-            return $model;
-        }
+        $model = $this->findModel($id);
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        $industries = $model->getIndustries()->with('stocks')->all();
+
+        return $this->render('delete-confirm', [
+            'model' => $model,
+            'industries' => $industries,
+        ]);
     }
 }

@@ -34,8 +34,8 @@ $this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs(
         <div class="card-body p-0">
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
-                'filterModel'  => $searchModel,
-                'summary'      => '<strong>{begin}</strong> to <strong>{end}</strong> out of <strong>{totalCount}</strong>',
+                'filterModel' => $searchModel,
+                'summary' => '<strong>{begin}</strong> to <strong>{end}</strong> out of <strong>{totalCount}</strong>',
                 'summaryOptions' => ['class' => 'text-start m-2'],
                 'layout' => "{items}"
                     . "<div class='card-footer position-relative py-3 px-2'>"
@@ -86,7 +86,7 @@ $this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs(
                         'urlCreator' => function ($action, Sector $model, $key, $index, $column) {
                             return Url::toRoute([$action, 'id' => $model->id]);
                         },
-                        'template' => '{view} {update} {delete}',
+                        'template' => '{update} {delete}',
                         'buttonOptions' => ['data-confirm' => false],
                     ],
                 ],

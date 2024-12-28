@@ -3,9 +3,9 @@
 use app\helpers\BreadcrumbHelper;
 use app\modules\config\models\Sector;
 use yii\data\ActiveDataProvider;
-use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\YiiAsset;
 use yii\widgets\DetailView;
 
@@ -92,20 +92,14 @@ YiiAsset::register($this);
                     'activePageCssClass' => 'active',
                     'disabledPageCssClass' => 'disabled',
                 ],
+                'rowOptions' => function ($model, $key, $index, $grid) {
+                    return [
+                        'onclick' => "window.location.href = '" . Url::to(['industry/view', 'id' => $model->id]) . "'",
+                        'style' => 'cursor: pointer;',
+                    ];
+                },
                 'columns' => [
-                    'name', // Name of the industry
-                    [
-                        'attribute' => 'description', // Replace with relevant attributes of Industry
-                        'label' => 'Description',
-                    ],
-                    [
-                        'class' => ActionColumn::class,
-                        'controller' => 'industry', // Adjust to match your Industry controller
-                        'template' => '{view} {update} {delete}',
-                        'urlCreator' => function ($action, $industry, $key, $index, $column) {
-                            return ['industry/' . $action, 'id' => $industry->id];
-                        },
-                    ],
+                    'name',
                 ],
             ]) ?>
         </div>
