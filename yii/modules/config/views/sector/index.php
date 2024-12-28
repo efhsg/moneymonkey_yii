@@ -30,7 +30,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterModel'  => $searchModel,
                 'summary'      => '<strong>{begin}</strong> to <strong>{end}</strong> out of <strong>{totalCount}</strong>',
                 'summaryOptions' => ['class' => 'text-start m-2'],
-                'layout' => "{items}\n<div class='card-footer position-relative'><div class='position-absolute start-0 top-50 translate-middle-y'>{summary}</div><div class='text-center'>{pager}</div></div>",
+                'layout' => "{items}"
+                    . "<div class='card-footer position-relative py-3 px-2'>"
+                    . "<div class='position-absolute start-0 top-50 translate-middle-y'>{summary}</div>"
+                    . "<div class='text-center'>{pager}</div>"
+                    . "</div>",
                 'tableOptions' => [
                     'class' => 'table table-striped table-hover mb-0',
                     'data-responsive' => 'true',

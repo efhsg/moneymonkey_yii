@@ -58,7 +58,7 @@ YiiAsset::register($this);
                 'summary' => '<strong>{begin}</strong> to <strong>{end}</strong> out of <strong>{totalCount}</strong>',
                 'summaryOptions' => ['class' => 'text-start m-2'],
                 'layout' => "{items}"
-                    . "<div class='card-footer position-relative py-1 px-2'>"
+                    . "<div class='card-footer position-relative py-3 px-2'>"
                     . "<div class='position-absolute start-0 top-50 translate-middle-y'>{summary}</div>"
                     . "<div class='text-center'>{pager}</div>"
                     . "</div>",
