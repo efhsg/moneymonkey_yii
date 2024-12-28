@@ -9,7 +9,15 @@ use yii\helpers\Html;
 
 $this->title = 'Update Sector: ' . $model->name;
 
-$this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs('Sectors', 'index', $model, 'Update');
+$this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs(
+    [
+        ['label' => 'Configuration', 'url' => null],
+        ['label' => 'Sectors', 'url' => ['index']],
+    ],
+    $model,
+    'Update'
+);
+
 
 ?>
 <div class="sector-update container py-4">

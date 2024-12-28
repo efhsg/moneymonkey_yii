@@ -1,5 +1,6 @@
 <?php
 
+use app\helpers\BreadcrumbHelper;
 use app\modules\config\models\Sector;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
@@ -11,7 +12,13 @@ use yii\helpers\Url;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Sectors';
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs(
+    [
+        ['label' => 'Configuration', 'url' => null],
+    ],
+    null,
+    $this->title
+);
 ?>
 <div class="sector-index container py-4">
 

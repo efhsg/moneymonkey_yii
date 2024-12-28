@@ -14,7 +14,15 @@ use yii\widgets\DetailView;
 /** @var ActiveDataProvider $industriesDataProvider */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs('Sectors', 'index', $model, 'View');
+$this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs(
+    [
+        ['label' => 'Configuration', 'url' => null], // Static parent breadcrumb
+        ['label' => 'Sectors', 'url' => ['index']], // Dynamic breadcrumb with URL
+    ],
+    $model,
+    'View'
+);
+
 YiiAsset::register($this);
 ?>
 <div class="sector-view container py-4">

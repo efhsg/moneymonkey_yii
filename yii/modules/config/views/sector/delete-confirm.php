@@ -7,7 +7,15 @@ use yii\helpers\Html;
 /** @var app\modules\config\models\Industry[] $industries */
 
 $this->title = 'Confirm Delete Sector';
-$this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs('Sectors', 'index', $model, 'Confirm Delete');
+$this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs(
+    [
+        ['label' => 'Configuration', 'url' => null],
+        ['label' => 'Sectors', 'url' => ['index']],
+    ],
+    $model,
+    'Confirm Delete'
+);
+
 
 ?>
 <div class="sector-delete-confirm container py-4">

@@ -9,7 +9,15 @@ use yii\helpers\Html;
 
 $this->title = 'Create Sector';
 
-$this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs('Sectors', 'index', null, 'Create');
+$this->params['breadcrumbs'] = BreadcrumbHelper::generateModelBreadcrumbs(
+    [
+        ['label' => 'Configuration', 'url' => null],
+        ['label' => 'Sectors', 'url' => ['index']],
+    ],
+    null,
+    'Create'
+);
+
 ?>
 <div class="sector-create container py-4">
     <div class="row justify-content-center">
