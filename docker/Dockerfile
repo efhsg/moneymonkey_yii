@@ -53,8 +53,16 @@ WORKDIR $WORKDIR
 # Add current directory (.) to the PATH
 ENV PATH="$WORKDIR:${PATH}"
 
-# Switch to the newly created user
+# ---------------------------------------------
+# Switch to root to create symlink
+USER root
+
+RUN mkdir -p /var/www/html/yii/vendor/bin && \
+    ln -s ../autoload.php /var/www/html/yii/vendor/bin/autoload.php
+
+# Switch back to the newly created user
 USER $USER_NAME
+# ---------------------------------------------
 
 # Create the function and append it to ~/.bashrc
 RUN echo 'function test() {' >> /home/$USER_NAME/.bashrc && \

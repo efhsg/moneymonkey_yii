@@ -1,22 +1,34 @@
-<?php
+<?php /** @noinspection PhpPossiblePolymorphicInvocationInspection */
 
 namespace tests\unit\models;
 
+use app\exceptions\UserCreationException;
+use app\services\UserService;
+use Codeception\Test\Unit;
+use Throwable;
 use Yii;
 use app\models\User;
 use tests\fixtures\UserFixture;
+use yii\base\InvalidConfigException;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
+use yii\di\NotInstantiableException;
 
-class UserTest extends \Codeception\Test\Unit
+class UserTest extends Unit
 {
 
-    private $userService;
+    private UserService $userService;
 
-    protected function _before()
+    /**
+     * @throws NotInstantiableException
+     * @throws InvalidConfigException
+     */
+    protected function _before(): void
     {
-        $this->userService = Yii::$container->get(\app\services\UserService::class);
+        $this->userService = Yii::$container->get(UserService::class);
     }
 
-    public function _fixtures()
+    public function _fixtures(): array
     {
         return [
             'users' => UserFixture::class,
@@ -47,6 +59,12 @@ class UserTest extends \Codeception\Test\Unit
         verify(User::findByUsername('not-admin'))->empty();
     }
 
+    /**
+     * @throws Exception
+     * @throws Throwable
+     * @throws StaleObjectException
+     * @throws UserCreationException
+     */
     public function testFindByPasswordResetToken()
     {
 
