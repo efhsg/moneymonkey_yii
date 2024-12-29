@@ -1,11 +1,10 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace app\models;
 
-use yii\db\{
-    ActiveQuery,
-    ActiveRecord
-};
+use app\modules\config\models\FinancialMetric;
+use app\modules\config\models\Industry;
+use yii\db\{ActiveQuery, ActiveRecord};
 
 /**
  * This is the model class for table "stocks".
@@ -141,7 +140,7 @@ class Stock extends ActiveRecord
      */
     public function setMarketCapDecimal(float|int|null $value): void
     {
-        $this->market_cap = $value !== null ? (int) round($value * self::MARKET_CAP_FACTOR) : null;
+        $this->market_cap = $value !== null ? (int)round($value * self::MARKET_CAP_FACTOR) : null;
     }
 
     /**
@@ -161,7 +160,7 @@ class Stock extends ActiveRecord
      */
     public function setPriceDecimal(float|int $value): void
     {
-        $this->price = (int) round($value * self::PRICE_FACTOR);
+        $this->price = (int)round($value * self::PRICE_FACTOR);
     }
 
     /**
