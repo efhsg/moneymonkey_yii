@@ -20,7 +20,7 @@ return [
     // Common aliases
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
 
     // Example of a shared module (from your web config)
@@ -39,18 +39,26 @@ return [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
-                    'class'  => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'class' => 'yii\log\DbTarget',
+                    'levels' => ['error', 'warning', 'info'],
+                    'categories' => ['application', 'database'],
+                    'logTable' => '{{%log}}',
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error', 'warning', 'info'],
+                    'categories' => ['application', 'database'],
+                    'logFile' => '@runtime/logs/db.log',
                 ],
             ],
         ],
         'formatter' => [
-            'class'           => 'yii\i18n\Formatter',
+            'class' => 'yii\i18n\Formatter',
             'defaultTimeZone' => 'Europe/Amsterdam',
         ],
         'mailer' => [
-            'class'      => \yii\symfonymailer\Mailer::class,
-            'viewPath'   => '@app/mail',
+            'class' => \yii\symfonymailer\Mailer::class,
+            'viewPath' => '@app/mail',
             // Send all mails to a file by default (change to `false` for real emails)
             'useFileTransport' => true,
         ],
