@@ -2,6 +2,7 @@
 
 namespace app\modules\config\models;
 
+use InvalidArgumentException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -30,18 +31,15 @@ class IndustrySearch extends Industry
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
-    public function search(array $params): ActiveDataProvider
+    public function search(array $params, ?int $userId): ActiveDataProvider
     {
-        $query = Industry::find();
+        if (!$userId) {
+            throw new InvalidArgumentException('User ID must be provided for IndustrySearch.');
+        }
 
-        // add conditions that should always apply here
+        $query = Industry::find()
+            ->joinWith('sector s')
+            ->andWhere(['s.user_id' => $userId]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -50,12 +48,12 @@ class IndustrySearch extends Industry
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
+            // Uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
+        // Apply grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'sector_id' => $this->sector_id,
@@ -65,4 +63,5 @@ class IndustrySearch extends Industry
 
         return $dataProvider;
     }
+
 }

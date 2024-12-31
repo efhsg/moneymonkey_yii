@@ -1,8 +1,7 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace tests\functional\config\controllers;
 
-use app\services\UserService;
 use Codeception\Exception\ModuleException;
 use FunctionalTester;
 use tests\fixtures\SectorFixture;
@@ -12,12 +11,10 @@ use tests\fixtures\UserFixture;
 class SectorControllerCest
 {
 
-    private UserService $userService;
-
     /**
      * @throws ModuleException
      */
-    public function _before(\FunctionalTester $I): void
+    public function _before(FunctionalTester $I): void
     {
         $I->haveFixtures(['user' => UserFixture::class, 'sectors' => SectorFixture::class,]);
         $I->amLoggedInAs(100);
@@ -88,10 +85,12 @@ class SectorControllerCest
         $I->seeResponseCodeIs(200);
     }
 
-
-
-
-
-
+    public function testUnauthorizedAccess(FunctionalTester $I): void
+    {
+        $I->amOnRoute('/login/logout');
+        $I->amOnRoute('/config/sector/');
+        $I->seeResponseCodeIs(200);
+        $I->see('Login', 'h1');
+    }
 
 }

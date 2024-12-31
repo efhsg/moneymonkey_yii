@@ -53,8 +53,7 @@ class SectorController extends Controller
     public function actionIndex(): string
     {
         $searchModel = new SectorSearch();
-        $userId = Yii::$app->user->id;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $userId);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, Yii::$app->user->id);
 
         return $this->render('index', [
             'searchModel' => $searchModel,

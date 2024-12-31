@@ -10,6 +10,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\db\Exception;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -35,6 +36,16 @@ class IndustryController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index', 'view', 'create', 'update', 'delete', 'delete-confirm'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],
+                    ],
+                ],
             ]
         );
     }
@@ -47,7 +58,7 @@ class IndustryController extends Controller
     public function actionIndex(): string
     {
         $searchModel = new IndustrySearch();
-        $activeDataProvider = $searchModel->search($this->request->queryParams);
+        $activeDataProvider = $searchModel->search($this->request->queryParams, Yii::$app->user->id);
         $activeDataProvider->pagination = false;
 
         $allModels = $activeDataProvider->getModels();
@@ -74,8 +85,9 @@ class IndustryController extends Controller
         $currentSectorId = null;
 
         foreach ($models as $model) {
+            $sectorName = $model->sector ? $model->sector->name : 'Unknown Sector';
             $row = [
-                'sector_name' => $currentSectorId !== $model->sector_id ? $model->sector->name : '',
+                'sector_name' => $currentSectorId !== $model->sector_id ? $sectorName : '',
                 'industry_name' => $model->name,
                 'id' => $model->id,
             ];

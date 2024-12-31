@@ -1,8 +1,9 @@
 <?php
+/** @noinspection PhpUnused */
 
 namespace app\modules\config\models;
 
-use Yii;
+use InvalidArgumentException;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -12,7 +13,7 @@ use yii\data\ActiveDataProvider;
 class SectorSearch extends Sector
 {
 
-    public $industries_count;
+    public int $industries_count = 0;
 
     /**
      * {@inheritdoc}
@@ -35,10 +36,10 @@ class SectorSearch extends Sector
         return Model::scenarios();
     }
 
-    public function search($params, $userId): ActiveDataProvider
+    public function search(array $params, int $userId): ActiveDataProvider
     {
         if (!$userId) {
-            throw new \InvalidArgumentException('User ID must be provided for SectorSearch.');
+            throw new InvalidArgumentException('User ID must be provided for SectorSearch.');
         }
 
         $query = Sector::find()

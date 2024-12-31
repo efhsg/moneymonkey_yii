@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
 
 <div class="industry-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id' => 'industry-form']); ?>
 
     <?= $form->field($model, 'sector_id')->dropDownList(
         $sectors,

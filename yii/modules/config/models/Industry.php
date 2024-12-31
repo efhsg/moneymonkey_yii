@@ -1,12 +1,9 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace app\modules\config\models;
 
-use yii\db\{
-    ActiveQuery,
-    ActiveRecord
-};
 use app\models\Stock;
+use yii\db\{ActiveQuery, ActiveRecord};
 
 /**
  * This is the model class for table "industries".

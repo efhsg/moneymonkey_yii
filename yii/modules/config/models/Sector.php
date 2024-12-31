@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace app\modules\config\models;
 
@@ -54,16 +54,6 @@ class Sector extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Industries]].
-     *
-     * @return ActiveQuery
-     */
-    public function getIndustries(): ActiveQuery
-    {
-        return $this->hasMany(Industry::class, ['sector_id' => 'id']);
-    }
-
-    /**
      * Gets query for [[User]].
      *
      * @return ActiveQuery
@@ -81,5 +71,15 @@ class Sector extends ActiveRecord
     public function getIndustriesCount(): int
     {
         return $this->getIndustries()->count();
+    }
+
+    /**
+     * Gets query for [[Industries]].
+     *
+     * @return ActiveQuery
+     */
+    public function getIndustries(): ActiveQuery
+    {
+        return $this->hasMany(Industry::class, ['sector_id' => 'id']);
     }
 }

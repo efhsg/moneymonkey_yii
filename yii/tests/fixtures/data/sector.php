@@ -11,4 +11,9 @@ return [
         'user_id' => 100,
         'name' => 'Healthcare',
     ],
+    'sector3' => [
+        'id' => 3,
+        'user_id' => 100,
+        'name' => 'Financial',
+    ],
 ];
