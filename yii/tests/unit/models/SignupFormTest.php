@@ -2,16 +2,22 @@
 
 namespace tests\unit\models;
 
-use Yii;
-use app\models\User;
+use app\modules\identity\exceptions\UserCreationException;
+use app\modules\identity\models\SignupForm;
+use app\modules\identity\models\User;
+use app\modules\identity\services\UserService;
 use Codeception\Stub;
-use app\models\SignupForm;
-use app\services\UserService;
+use Codeception\Test\Unit;
+use Exception;
+use Yii;
 use yii\captcha\CaptchaValidator;
 
-class SignupFormTest extends \Codeception\Test\Unit
+class SignupFormTest extends Unit
 {
 
+    /**
+     * @throws Exception
+     */
     public function testSignupSuccess()
     {
         /** @var UserService $userService */
@@ -49,6 +55,9 @@ class SignupFormTest extends \Codeception\Test\Unit
         verify($user->validatePassword('securepassword'))->true();
     }
 
+    /**
+     * @throws Exception
+     */
     public function testSignupFailureWithEmptyFields()
     {
         /** @var UserService $userService */
@@ -68,6 +77,9 @@ class SignupFormTest extends \Codeception\Test\Unit
         verify($model->hasErrors('password'))->true();
     }
 
+    /**
+     * @throws Exception
+     */
     public function testSignupFailureWithInvalidPasswordLength()
     {
         $userService = Stub::make(UserService::class);
@@ -85,11 +97,14 @@ class SignupFormTest extends \Codeception\Test\Unit
         verify($model->hasErrors('password'))->true();
     }
 
+    /**
+     * @throws Exception
+     */
     public function testSignupFailureWhenUserServiceThrowsException()
     {
         $userService = Stub::make(UserService::class, [
             'create' => function () {
-                throw new \app\exceptions\UserCreationException('User creation failed');
+                throw new UserCreationException('User creation failed');
             }
         ]);
 
@@ -106,7 +121,6 @@ class SignupFormTest extends \Codeception\Test\Unit
         verify($model->hasErrors('username'))->true();
         verify($model->getFirstError('username'))->equals('User creation failed');
     }
-
 
 
 }

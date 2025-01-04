@@ -2,13 +2,10 @@
 
 namespace app\modules\config\models;
 
-use yii\db\{
-    ActiveQuery,
-    ActiveRecord
-};
 use app\models\Stock;
 use app\models\StockData;
-use app\models\User;
+use app\modules\identity\models\User;
+use yii\db\{ActiveQuery, ActiveRecord};
 
 /**
  * This is the model class for table "data_sources".

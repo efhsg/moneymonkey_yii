@@ -2,39 +2,24 @@
 
 namespace tests\unit\commands;
 
-use Yii;
-use Exception;
-use app\models\User;
-use yii\console\ExitCode;
+use app\modules\identity\commands\UserController;
+use app\modules\identity\models\User;
+use app\modules\identity\services\UserService;
 use Codeception\Test\Unit;
-use app\services\UserService;
+use Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use tests\fixtures\UserFixture;
-use app\commands\UserController;
+use Yii;
+use yii\base\InvalidConfigException;
+use yii\console\ExitCode;
+use yii\di\NotInstantiableException;
 
 class UserControllerTest extends Unit
 {
     /** @var UserController */
-    private $controller;
+    private UserController $controller;
 
-    /** @var UserService */
-    private $userService;
-
-    protected function _before()
-    {
-        $this->userService = Yii::$container->get(UserService::class);
-
-        $this->controller = new class ('user', Yii::$app, $this->userService) extends UserController {
-            public function stdout($string)
-            {
-            }
-
-            public function stderr($string)
-            {
-            }
-        };
-    }
-
-    public function _fixtures()
+    public function _fixtures(): array
     {
         return [
             'users' => UserFixture::class,
@@ -67,9 +52,12 @@ class UserControllerTest extends Unit
         $this->assertEquals(ExitCode::UNSPECIFIED_ERROR, $exitCode);
     }
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testActionCreateWithException(): void
     {
-        /** @var UserService|\PHPUnit\Framework\MockObject\MockObject $mockUserService */
+        /** @var UserService|MockObject $mockUserService */
         $mockUserService = $this->createMock(UserService::class);
         $mockUserService->method('create')->willThrowException(new Exception('Database error'));
 
@@ -88,6 +76,9 @@ class UserControllerTest extends Unit
         $this->assertEquals(ExitCode::UNSPECIFIED_ERROR, $exitCode);
     }
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testActionDeleteSoftDeleteSuccess()
     {
         $username = 'admin';
@@ -104,10 +95,12 @@ class UserControllerTest extends Unit
             public function stdout($string)
             {
             }
+
             public function stderr($string)
             {
             }
-            public function prompt($message, $options = [])
+
+            public function prompt($text, $options = []): string
             {
                 return 'soft';
             }
@@ -120,6 +113,9 @@ class UserControllerTest extends Unit
         $this->assertNotNull($user->deleted_at, 'The user should be marked as soft deleted.');
     }
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testActionDeleteHardDeleteSuccess()
     {
         $username = 'admin';
@@ -135,10 +131,12 @@ class UserControllerTest extends Unit
             public function stdout($string)
             {
             }
+
             public function stderr($string)
             {
             }
-            public function prompt($message, $options = [])
+
+            public function prompt($text, $options = []): string
             {
                 return 'hard';
             }
@@ -149,6 +147,25 @@ class UserControllerTest extends Unit
 
         $deletedUser = User::findOne(['username' => $username]);
         $this->assertNull($deletedUser, 'The user should be fully removed after a hard delete.');
+    }
+
+    /**
+     * @throws NotInstantiableException
+     * @throws InvalidConfigException
+     */
+    protected function _before(): void
+    {
+        $userService = Yii::$container->get(UserService::class);
+
+        $this->controller = new class ('user', Yii::$app, $userService) extends UserController {
+            public function stdout($string)
+            {
+            }
+
+            public function stderr($string)
+            {
+            }
+        };
     }
 
 

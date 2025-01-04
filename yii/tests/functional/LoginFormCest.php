@@ -2,7 +2,7 @@
 
 namespace tests\functional;
 
-use app\models\User;
+use app\modules\identity\models\User;
 use Codeception\Exception\ModuleException;
 use FunctionalTester;
 use tests\fixtures\UserFixture;
@@ -14,7 +14,7 @@ class LoginFormCest
     public function _before(FunctionalTester $I): void
     {
         $I->haveFixtures(['user' => UserFixture::class]);
-        $I->amOnRoute('login/login');
+        $I->amOnRoute('/identity/login/login');
     }
 
     public function openLoginPage(FunctionalTester $I): void
@@ -47,13 +47,6 @@ class LoginFormCest
         }
     }
 
-    private function seeValidationErrors(FunctionalTester $I, array $errors): void
-    {
-        foreach ($errors as $error) {
-            $I->see($error);
-        }
-    }
-
     public function loginWithEmptyCredentials(FunctionalTester $I): void
     {
         $I->seeElement('#login-form');
@@ -63,6 +56,13 @@ class LoginFormCest
             'Username cannot be blank.',
             'Password cannot be blank.'
         ]);
+    }
+
+    private function seeValidationErrors(FunctionalTester $I, array $errors): void
+    {
+        foreach ($errors as $error) {
+            $I->see($error);
+        }
     }
 
     public function loginWithWrongCredentials(FunctionalTester $I): void

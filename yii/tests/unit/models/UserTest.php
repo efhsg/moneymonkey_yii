@@ -2,13 +2,13 @@
 
 namespace tests\unit\models;
 
-use app\exceptions\UserCreationException;
-use app\services\UserService;
+use app\modules\identity\exceptions\UserCreationException;
+use app\modules\identity\models\User;
+use app\modules\identity\services\UserService;
 use Codeception\Test\Unit;
+use tests\fixtures\UserFixture;
 use Throwable;
 use Yii;
-use app\models\User;
-use tests\fixtures\UserFixture;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
 use yii\db\StaleObjectException;
@@ -18,15 +18,6 @@ class UserTest extends Unit
 {
 
     private UserService $userService;
-
-    /**
-     * @throws NotInstantiableException
-     * @throws InvalidConfigException
-     */
-    protected function _before(): void
-    {
-        $this->userService = Yii::$container->get(UserService::class);
-    }
 
     public function _fixtures(): array
     {
@@ -124,6 +115,15 @@ class UserTest extends Unit
 
         verify($user->auth_key)->notEmpty();
         verify(strlen($user->auth_key))->equals(32);
+    }
+
+    /**
+     * @throws NotInstantiableException
+     * @throws InvalidConfigException
+     */
+    protected function _before(): void
+    {
+        $this->userService = Yii::$container->get(UserService::class);
     }
 
 }

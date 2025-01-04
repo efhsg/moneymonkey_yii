@@ -2,7 +2,7 @@
 
 namespace app\modules\config\models;
 
-use app\models\User;
+use app\modules\identity\models\User;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 

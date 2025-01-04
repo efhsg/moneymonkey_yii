@@ -2,10 +2,9 @@
 
 namespace tests\unit\models;
 
-use Yii;
-use app\models\LoginForm;
-use app\models\User;
+use app\modules\identity\models\LoginForm;
 use tests\fixtures\UserFixture;
+use Yii;
 
 class LoginFormTest extends \Codeception\Test\Unit
 {

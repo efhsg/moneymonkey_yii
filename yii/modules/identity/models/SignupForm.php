@@ -1,10 +1,10 @@
 <?php
 
-namespace app\models;
+namespace app\modules\identity\models;
 
+use app\modules\identity\exceptions\UserCreationException;
+use app\modules\identity\services\UserService;
 use yii\base\Model;
-use app\services\UserService;
-use app\exceptions\UserCreationException;
 
 /**
  * SignupForm handles user registration.
@@ -14,7 +14,7 @@ class SignupForm extends Model
     public string $username = '';
     public string $email = '';
     public string $password = '';
-    public $captcha = Null;
+    public ?string $captcha = Null;
 
     private UserService $userService;
 
@@ -30,7 +30,7 @@ class SignupForm extends Model
             [['username', 'email', 'password'], 'required'],
             [['password'], 'string', 'min' => 3, 'max' => 255],
             ['email', 'email'],
-            ['captcha', 'captcha', 'captchaAction' => 'login/captcha'],
+            ['captcha', 'captcha', 'captchaAction' => '/identity/login/captcha'],
         ];
     }
 

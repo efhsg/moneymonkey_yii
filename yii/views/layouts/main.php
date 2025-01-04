@@ -53,11 +53,11 @@ $this->beginContent('@app/views/layouts/_base.php'); ?>
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav ms-auto'],
             'items' => Yii::$app->user->isGuest ? [
-                ['label' => 'Signup', 'url' => ['/login/signup']],
-                ['label' => 'Login', 'url' => ['/login/login']],
+                ['label' => 'Signup', 'url' => ['/identity/login/signup']],
+                ['label' => 'Login', 'url' => ['/identity/login/login']],
             ] : [
                 '<li class="nav-item">'
-                . Html::beginForm(['/login/logout'], 'post')
+                . Html::beginForm(['/identity/login/logout'], 'post')
                 . Html::submitButton(
                     'Logout (' . Html::encode(Yii::$app->user->identity->username) . ')',
                     ['class' => 'nav-link btn btn-link logout']

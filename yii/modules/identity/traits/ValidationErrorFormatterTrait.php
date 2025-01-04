@@ -1,6 +1,6 @@
 <?php
 
-namespace app\traits;
+namespace app\modules\identity\traits;
 
 use yii\base\Model;
 

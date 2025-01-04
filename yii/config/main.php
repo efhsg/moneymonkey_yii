@@ -9,7 +9,7 @@ use yii\symfonymailer\Mailer;
 
 $params = require __DIR__ . '/params.php';
 
-return [
+$config = [
     'name' => 'MoneyMonkey',
 
     // Base application path
@@ -27,10 +27,12 @@ return [
         '@npm' => '@vendor/npm-asset',
     ],
 
-    // Example of a shared module (from your web config)
     'modules' => [
         'config' => [
             'class' => 'app\modules\config\ConfigModule',
+        ],
+        'identity' => [
+            'class' => 'app\modules\identity\Module',
         ],
     ],
 
@@ -77,10 +79,12 @@ return [
             ],
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'class' => 'yii\web\User',
+            'identityClass' => 'app\modules\identity\models\User',
             'enableAutoLogin' => true,
             'authTimeout' => 3600 * 24 * 30,
-            'loginUrl' => ['/login/login'],
+            'loginUrl' => ['/identity/login/login'],
+            'enableSession' => !Yii::$app instanceof yii\console\Application,
         ],
         'mailer' => [
             'class' => Mailer::class,
@@ -88,11 +92,25 @@ return [
             // Send all mails to a file by default (change to `false` for real emails)
             'useFileTransport' => true,
         ],
-        'errorHandler' => [
-            'errorAction' => 'site/error',
-        ],
     ],
 
     // Common parameters
     'params' => $params,
 ];
+
+if (YII_ENV == 'web') {
+    $config['components']['errorHandler'] = [
+        'class' => 'yii\web\ErrorHandler',
+        'errorAction' => 'site/error',
+    ];
+}
+
+$config['container'] = [
+    'definitions' => [
+        'app\modules\identity\services\UserDataSeederInterface' => [
+            'class' => 'app\services\UserDataSeeder',
+        ],
+    ],
+];
+
+return $config;

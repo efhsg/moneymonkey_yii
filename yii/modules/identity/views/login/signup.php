@@ -1,13 +1,10 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 
+use yii\bootstrap5\{ActiveForm, Html};
 use yii\captcha\Captcha;
-use yii\bootstrap5\{
-    ActiveForm,
-    Html
-};
 
 /** @var yii\web\View $this */
-/** @var app\models\SignupForm $model */
+/** @var app\modules\identity\models\SignupForm $model */
 
 $this->title = 'Signup';
 $this->params['breadcrumbs'][] = $this->title;
@@ -39,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]) ?>
 
                 <?= $form->field($model, 'captcha', ['labelOptions' => ['style' => 'display:none']])->widget(Captcha::class, [
-                    'captchaAction' => 'login/captcha',
+                    'captchaAction' => '/identity/login/captcha',
                     'options' => ['placeholder' => 'Enter the verification code'],
                     'template' => '<div class="d-flex">{image}{input}</div>',
                 ]) ?>

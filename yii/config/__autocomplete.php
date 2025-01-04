@@ -1,4 +1,6 @@
-<?php
+<?php /** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpFullyQualifiedNameUsageInspection */
+/** @noinspection PhpUndefinedClassInspection */
 
 /**
  * This class only exists here for IDE (PHPStorm/Netbeans/...) autocompletion.
@@ -11,23 +13,26 @@
  * }
  * ```
  */
-class Yii {
+class Yii
+{
     /**
      * @var \yii\web\Application|\yii\console\Application|__Application
      */
-    public static $app;
+    public static \yii\console\Application|__Application|\yii\web\Application $app;
 }
 
 /**
- * @property yii\rbac\DbManager $authManager 
+ * @property yii\rbac\DbManager $authManager
  * @property \yii\web\User|__WebUser $user
- * 
+ *
  */
-class __Application {
+class __Application
+{
 }
 
 /**
- * @property app\models\User $identity
+ * @property app\modules\identity\models\User $identity
  */
-class __WebUser {
+class __WebUser
+{
 }

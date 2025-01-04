@@ -6,8 +6,8 @@ $main = require __DIR__ . '/main.php';
 $params = require __DIR__ . '/params.php';
 
 $config = [
-    'id'                   => 'basic-console',
-    'controllerNamespace'  => 'app\commands',
+    'id' => 'basic-console',
+    'controllerNamespace' => 'app\commands',
     'aliases' => [
         '@tests' => '@app/tests',
     ],
@@ -16,7 +16,7 @@ $config = [
     ],
     'container' => [
         'definitions' => [
-            app\services\UserService::class => app\services\UserService::class,
+            app\modules\identity\services\UserService::class => app\modules\identity\services\UserService::class
         ],
     ],
     'params' => $params,
@@ -31,7 +31,7 @@ if (YII_ENV_DEV) {
 
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
-        'class'      => 'yii\debug\Module',
+        'class' => 'yii\debug\Module',
         'allowedIPs' => ['127.0.0.1', '::1', '172.*.*.*'],
     ];
 }

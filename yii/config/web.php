@@ -9,7 +9,6 @@ $config = [
     'id' => 'basic',
     'components' => [
         'db' => require __DIR__ . '/db.php',
-
         'request' => [
             'cookieValidationKey' => 'IwE5i3d_0AhHc5a7gnVMSk38YDzgqBYi',
         ],

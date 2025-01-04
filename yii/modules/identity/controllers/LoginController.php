@@ -1,18 +1,12 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
-namespace app\controllers;
+namespace app\modules\identity\controllers;
 
-use app\services\UserService;
+use app\modules\identity\models\LoginForm;
+use app\modules\identity\models\SignupForm;
+use app\modules\identity\services\UserService;
 use Yii;
-
-use app\models\{
-    LoginForm,
-    SignupForm
-};
-use yii\web\{
-    Controller,
-    Response
-};
+use yii\web\{Controller, Response};
 
 class LoginController extends Controller
 {
@@ -57,9 +51,9 @@ class LoginController extends Controller
         if (Yii::$app->request->isPost) {
             $model->load(Yii::$app->request->post());
 
-            if ($user = $model->signup()) {
+            if ($model->signup()) {
                 Yii::$app->session->setFlash('success', 'Registration successful! You can now log in.');
-                return $this->redirect(['login/login']);
+                return $this->redirect(['/identity/login/login']);
             }
         }
 

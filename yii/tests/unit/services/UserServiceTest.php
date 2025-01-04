@@ -5,21 +5,16 @@ namespace tests\unit\services;
 use app\modules\config\models\Industry;
 use app\modules\config\models\MetricType;
 use app\modules\config\models\Sector;
-use PHPUnit\Framework\MockObject\Exception;
-use Yii;
-use app\models\User;
+use app\modules\identity\models\User;
+use app\modules\identity\services\UserService;
 use Codeception\Test\Unit;
-use app\services\UserService;
+use PHPUnit\Framework\MockObject\Exception;
 use tests\fixtures\UserFixture;
+use Yii;
 
 class UserServiceTest extends Unit
 {
     private UserService $userService;
-
-    protected function _before(): void
-    {
-        $this->userService = Yii::$container->get(UserService::class);
-    }
 
     public function _fixtures(): array
     {
@@ -60,7 +55,6 @@ class UserServiceTest extends Unit
         $this->assertNotEmpty($industries);
     }
 
-
     public function testCreateUserSeedsMetricTypes()
     {
         $username = 'metricuser';
@@ -73,7 +67,6 @@ class UserServiceTest extends Unit
         $metricTypes = MetricType::find()->where(['user_id' => $user->id])->all();
         $this->assertNotEmpty($metricTypes);
     }
-
 
     public function testCreateUserWithException()
     {
@@ -173,6 +166,11 @@ class UserServiceTest extends Unit
         $result = $this->userService->hardDelete($user);
 
         $this->assertFalse($result);
+    }
+
+    protected function _before(): void
+    {
+        $this->userService = Yii::$container->get(UserService::class);
     }
 
 

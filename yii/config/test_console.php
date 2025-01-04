@@ -30,7 +30,7 @@ $config = [
     'params' => $params,
     'container' => [
         'definitions' => [
-            app\services\UserService::class => app\services\UserService::class
+            app\modules\identity\services\UserService::class => app\modules\identity\services\UserService::class
         ],
     ],
     /*

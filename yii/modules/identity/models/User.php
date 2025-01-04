@@ -1,11 +1,12 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
-namespace app\models;
+namespace app\modules\identity\models;
 
+use Yii;
+use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-use Yii;
 
 /**
  *
@@ -19,7 +20,7 @@ use Yii;
  * @property int $status
  * @property int $created_at
  * @property int $updated_at
- * @property int $deleted_at 
+ * @property int $deleted_at
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -35,13 +36,52 @@ class User extends ActiveRecord implements IdentityInterface
         return '{{%user}}';
     }
 
+    public static function findIdentity($id): ?self
+    {
+        return static::find()->active()->andWhere(['id' => $id])->one();
+    }
+
+    public static function find(): UserQuery
+    {
+        return new UserQuery(get_called_class());
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null): ?self
+    {
+        return static::find()->active()->andWhere(['access_token' => $token])->one();
+    }
+
+    public static function findByUsername(string $username): ?self
+    {
+        return static::find()->active()->byUsername($username)->one();
+    }
+
+    public static function findByPasswordResetToken(string $token): ?self
+    {
+        if (!self::isPasswordResetTokenValid($token)) {
+            return null;
+        }
+        return static::find()->active()->byPasswordResetToken($token)->one();
+    }
+
+    private static function isPasswordResetTokenValid($token): bool
+    {
+        if (!$token || !str_contains($token, '_')) {
+            return false;
+        }
+        $parts = explode('_', $token);
+        $timestamp = (int)end($parts);
+        $expire = Yii::$app->params['user.passwordResetTokenExpire'] ?? self::TOKEN_EXPIRATION_SECONDS;
+
+        return $timestamp + $expire >= time();
+    }
+
     public function behaviors(): array
     {
         return [
             TimestampBehavior::class,
         ];
     }
-
 
     public function rules(): array
     {
@@ -76,42 +116,9 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public static function find()
-    {
-        return new UserQuery(get_called_class());
-    }
-
-    public static function findIdentity($id): ?self
-    {
-        return static::find()->active()->andWhere(['id' => $id])->one();
-    }
-
-    public static function findIdentityByAccessToken($token, $type = null): ?self
-    {
-        return static::find()->active()->andWhere(['access_token' => $token])->one();
-    }
-
-    public static function findByUsername(string $username): ?self
-    {
-        return static::find()->active()->byUsername($username)->one();
-    }
-
-    public static function findByPasswordResetToken(string $token): ?self
-    {
-        if (!self::isPasswordResetTokenValid($token)) {
-            return null;
-        }
-        return static::find()->active()->byPasswordResetToken($token)->one();
-    }
-
     public function getId(): int|string
     {
         return $this->getPrimaryKey();
-    }
-
-    public function getAuthKey(): string
-    {
-        return $this->auth_key;
     }
 
     public function validateAuthKey($authKey): bool
@@ -119,6 +126,14 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->getAuthKey() === $authKey;
     }
 
+    public function getAuthKey(): string
+    {
+        return $this->auth_key;
+    }
+
+    /**
+     * @throws Exception
+     */
     public function setPassword($password): void
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
@@ -129,20 +144,11 @@ class User extends ActiveRecord implements IdentityInterface
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
+    /**
+     * @throws Exception
+     */
     public function generateAuthKey(): void
     {
-        $this->auth_key = Yii::$app->security->generateRandomString(32);
-    }
-
-    private static function isPasswordResetTokenValid($token): bool
-    {
-        if (!$token || !str_contains($token, '_')) {
-            return false;
-        }
-        $parts = explode('_', $token);
-        $timestamp = (int) end($parts);
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'] ?? self::TOKEN_EXPIRATION_SECONDS;
-
-        return $timestamp + $expire >= time();
+        $this->auth_key = Yii::$app->security->generateRandomString();
     }
 }

@@ -87,7 +87,7 @@ class SectorControllerCest
 
     public function testUnauthorizedAccess(FunctionalTester $I): void
     {
-        $I->amOnRoute('/login/logout');
+        $I->amOnRoute('/identity/login/logout');
         $I->amOnRoute('/config/sector/');
         $I->seeResponseCodeIs(200);
         $I->see('Login', 'h1');

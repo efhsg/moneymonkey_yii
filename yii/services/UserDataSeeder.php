@@ -1,11 +1,12 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace app\services;
 
+use app\modules\identity\services\UserDataSeederInterface;
 use Yii;
 use yii\db\Exception;
 
-class UserDataSeeder
+class UserDataSeeder implements UserDataSeederInterface
 {
     /**
      * Seed user data with sectors, industries, and metric types.

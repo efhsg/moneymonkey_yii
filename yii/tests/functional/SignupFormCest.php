@@ -2,8 +2,8 @@
 
 namespace tests\functional;
 
-use app\models\User;
-use app\services\UserService;
+use app\modules\identity\models\User;
+use app\modules\identity\services\UserService;
 use tests\fixtures\UserFixture;
 use Yii;
 
@@ -16,19 +16,12 @@ class SignupFormCest
     {
         $this->userService = Yii::$container->get(UserService::class);
         $I->haveFixtures(['user' => UserFixture::class]);
-        $I->amOnRoute('login/signup');
+        $I->amOnRoute('identity/login/signup');
     }
 
     public function openSignupPage(\FunctionalTester $I): void
     {
         $I->see('Signup', 'h1');
-    }
-
-    private function seeValidationErrors(\FunctionalTester $I, array $errors): void
-    {
-        foreach ($errors as $error) {
-            $I->see($error);
-        }
     }
 
     public function signupWithEmptyFields(\FunctionalTester $I): void
@@ -41,6 +34,13 @@ class SignupFormCest
             'Email cannot be blank.',
             'Password cannot be blank.',
         ]);
+    }
+
+    private function seeValidationErrors(\FunctionalTester $I, array $errors): void
+    {
+        foreach ($errors as $error) {
+            $I->see($error);
+        }
     }
 
     public function signupWithInvalidEmail(\FunctionalTester $I): void
