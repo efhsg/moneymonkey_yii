@@ -83,7 +83,7 @@ $config = [
             'identityClass' => 'app\modules\identity\models\User',
             'enableAutoLogin' => true,
             'authTimeout' => 3600 * 24 * 30,
-            'loginUrl' => ['/identity/login/login'],
+            'loginUrl' => ['/identity/auth/login'],
             'enableSession' => !Yii::$app instanceof yii\console\Application,
         ],
         'mailer' => [

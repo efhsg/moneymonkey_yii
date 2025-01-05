@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpUnused */
 
-namespace tests\functional;
+namespace tests\functional\indentity;
 
 use app\modules\identity\models\User;
 use Codeception\Exception\ModuleException;
@@ -14,7 +14,7 @@ class LoginFormCest
     public function _before(FunctionalTester $I): void
     {
         $I->haveFixtures(['user' => UserFixture::class]);
-        $I->amOnRoute('/identity/login/login');
+        $I->amOnRoute('/identity/auth/login');
     }
 
     public function openLoginPage(FunctionalTester $I): void

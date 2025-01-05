@@ -103,7 +103,10 @@ class IndustryControllerCest
 
     public function testUnauthorizedAccess(FunctionalTester $I): void
     {
-        $I->amOnRoute('/identity/login/logout');
+        $I->amOnRoute('/config/industry/');
+        $I->seeResponseCodeIs(200);
+        $I->amOnRoute('/identity/auth/logout');
+        $I->seeResponseCodeIs(200);
         $I->amOnRoute('/config/industry/');
         $I->seeResponseCodeIs(200);
         $I->see('Login', 'h1');

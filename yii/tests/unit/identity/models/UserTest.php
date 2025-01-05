@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpPossiblePolymorphicInvocationInspection */
 
-namespace tests\unit\models;
+namespace unit\identity\models;
 
 use app\modules\identity\exceptions\UserCreationException;
 use app\modules\identity\models\User;
@@ -97,6 +97,9 @@ class UserTest extends Unit
         verify($user->validatePassword('123456'))->empty();
     }
 
+    /**
+     * @throws \yii\base\Exception
+     */
     public function testSetPassword()
     {
         $user = new User();
@@ -108,6 +111,9 @@ class UserTest extends Unit
         verify(Yii::$app->security->validatePassword('wrong_password', $user->password_hash))->false();
     }
 
+    /**
+     * @throws \yii\base\Exception
+     */
     public function testGenerateAuthKey()
     {
         $user = new User();

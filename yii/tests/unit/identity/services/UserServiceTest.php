@@ -1,16 +1,19 @@
 <?php
 
-namespace tests\unit\services;
+namespace tests\unit\identity\services;
 
 use app\modules\config\models\Industry;
 use app\modules\config\models\MetricType;
 use app\modules\config\models\Sector;
+use app\modules\identity\exceptions\UserCreationException;
 use app\modules\identity\models\User;
 use app\modules\identity\services\UserService;
 use Codeception\Test\Unit;
 use PHPUnit\Framework\MockObject\Exception;
 use tests\fixtures\UserFixture;
 use Yii;
+use yii\base\InvalidConfigException;
+use yii\di\NotInstantiableException;
 
 class UserServiceTest extends Unit
 {
@@ -23,6 +26,9 @@ class UserServiceTest extends Unit
         ];
     }
 
+    /**
+     * @throws UserCreationException
+     */
     public function testCreateUser()
     {
         $username = 'newuser';
@@ -38,6 +44,9 @@ class UserServiceTest extends Unit
         verify($user->status)->equals(User::STATUS_ACTIVE);
     }
 
+    /**
+     * @throws UserCreationException
+     */
     public function testCreateUserSeedsSectorsAndIndustries()
     {
         $username = 'seederuser';
@@ -55,6 +64,9 @@ class UserServiceTest extends Unit
         $this->assertNotEmpty($industries);
     }
 
+    /**
+     * @throws UserCreationException
+     */
     public function testCreateUserSeedsMetricTypes()
     {
         $username = 'metricuser';
@@ -68,6 +80,9 @@ class UserServiceTest extends Unit
         $this->assertNotEmpty($metricTypes);
     }
 
+    /**
+     * @throws UserCreationException
+     */
     public function testCreateUserWithException()
     {
         $this->expectException(\Exception::class);
@@ -75,6 +90,9 @@ class UserServiceTest extends Unit
         $this->userService->create('invaliduser', 'invalid-email', 'password123');
     }
 
+    /**
+     * @throws \yii\base\Exception
+     */
     public function testGeneratePasswordResetToken()
     {
         $user = User::findOne(100);
@@ -86,6 +104,9 @@ class UserServiceTest extends Unit
         verify(strpos($user->password_reset_token, '_'))->notFalse();
     }
 
+    /**
+     * @throws \yii\base\Exception
+     */
     public function testRemovePasswordResetToken()
     {
         $user = User::findOne(100);
@@ -168,6 +189,10 @@ class UserServiceTest extends Unit
         $this->assertFalse($result);
     }
 
+    /**
+     * @throws NotInstantiableException
+     * @throws InvalidConfigException
+     */
     protected function _before(): void
     {
         $this->userService = Yii::$container->get(UserService::class);

@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\unit\commands;
+namespace tests\unit\identity\commands;
 
 use app\modules\identity\commands\UserController;
 use app\modules\identity\models\User;

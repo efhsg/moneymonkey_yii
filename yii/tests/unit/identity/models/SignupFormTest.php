@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\unit\models;
+namespace unit\identity\models;
 
 use app\modules\identity\exceptions\UserCreationException;
 use app\modules\identity\models\SignupForm;

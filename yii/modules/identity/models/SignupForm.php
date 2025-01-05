@@ -30,7 +30,7 @@ class SignupForm extends Model
             [['username', 'email', 'password'], 'required'],
             [['password'], 'string', 'min' => 3, 'max' => 255],
             ['email', 'email'],
-            ['captcha', 'captcha', 'captchaAction' => '/identity/login/captcha'],
+            ['captcha', 'captcha', 'captchaAction' => '/identity/auth/captcha'],
         ];
     }
 

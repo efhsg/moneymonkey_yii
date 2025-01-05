@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]) ?>
 
                 <?= $form->field($model, 'captcha', ['labelOptions' => ['style' => 'display:none']])->widget(Captcha::class, [
-                    'captchaAction' => '/identity/login/captcha',
+                    'captchaAction' => '/identity/auth/captcha',
                     'options' => ['placeholder' => 'Enter the verification code'],
                     'template' => '<div class="d-flex">{image}{input}</div>',
                 ]) ?>

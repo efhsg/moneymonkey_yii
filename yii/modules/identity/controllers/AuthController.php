@@ -8,7 +8,7 @@ use app\modules\identity\services\UserService;
 use Yii;
 use yii\web\{Controller, Response};
 
-class LoginController extends Controller
+class AuthController extends Controller
 {
 
     public function actions(): array
@@ -53,7 +53,7 @@ class LoginController extends Controller
 
             if ($model->signup()) {
                 Yii::$app->session->setFlash('success', 'Registration successful! You can now log in.');
-                return $this->redirect(['/identity/login/login']);
+                return $this->redirect(['/identity/auth/login']);
             }
         }
 

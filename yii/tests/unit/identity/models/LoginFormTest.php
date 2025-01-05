@@ -1,15 +1,16 @@
 <?php
 
-namespace tests\unit\models;
+namespace unit\identity\models;
 
 use app\modules\identity\models\LoginForm;
+use Codeception\Test\Unit;
 use tests\fixtures\UserFixture;
 use Yii;
 
-class LoginFormTest extends \Codeception\Test\Unit
+class LoginFormTest extends Unit
 {
 
-    public function _fixtures()
+    public function _fixtures(): array
     {
         return [
             'users' => UserFixture::class,
