@@ -1,10 +1,6 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
-namespace fixtures;
-
-
-use tests\fixtures\IndustryFixture;
-use tests\fixtures\SectorFixture;
+namespace tests\fixtures;
 
 class StockDependentFixture extends SectorFixture
 {

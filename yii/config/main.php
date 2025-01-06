@@ -98,13 +98,6 @@ $config = [
     'params' => $params,
 ];
 
-if (YII_ENV == 'web') {
-    $config['components']['errorHandler'] = [
-        'class' => 'yii\web\ErrorHandler',
-        'errorAction' => 'site/error',
-    ];
-}
-
 $config['container'] = [
     'definitions' => [
         'app\modules\identity\services\UserDataSeederInterface' => [

@@ -12,6 +12,10 @@ $config = [
         'request' => [
             'cookieValidationKey' => 'IwE5i3d_0AhHc5a7gnVMSk38YDzgqBYi',
         ],
+        $config['components']['errorHandler'] = [
+            'class' => 'yii\web\ErrorHandler',
+            'errorAction' => 'site/error',
+        ],
     ],
 
     'params' => $params,

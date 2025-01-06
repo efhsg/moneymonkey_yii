@@ -1,6 +1,6 @@
 <?php
 
-namespace unit\identity\models;
+namespace tests\unit\identity\models;
 
 use app\modules\identity\models\LoginForm;
 use Codeception\Test\Unit;

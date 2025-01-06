@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpPossiblePolymorphicInvocationInspection */
 
-namespace unit\identity\models;
+namespace tests\unit\identity\models;
 
 use app\modules\identity\exceptions\UserCreationException;
 use app\modules\identity\models\User;

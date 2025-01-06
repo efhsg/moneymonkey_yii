@@ -1,5 +1,7 @@
 <?php
 
+namespace tests\acceptance;
+
 use yii\helpers\Url;
 
 class LoginCest
